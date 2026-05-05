@@ -24,13 +24,19 @@ The skills here are productized versions of work we do at 5050Growth on real cli
 |---|---|
 | [`/cohort-analysis`](skills/cohort-analysis/) | Customer cohort retention table from your CRM (Attio/Stripe/CSV) joined to revenue (Stripe/Attio/CSV). Output: CSV, SQL, or DuckDB+Evidence. |
 
+### SEO / Demand
+
+| Skill | What it does |
+|---|---|
+| [`/gsc-lighthouse`](skills/gsc-lighthouse/) | One-shot Google Search Console + Lighthouse health check for a verified GSC property. Sitemap status, per-URL index coverage, 28-day search analytics, and PageSpeed Insights on the top 10 pages, all in one report grouped by theme. |
+
 ### Coming soon
 
 We're adding skills as we productize internal work. Star the repo to follow along:
 
 - **Sales Ops** — proposal generation from call transcripts, pre-discovery briefs, lead scoring rules
 - **Lifecycle / RevOps** — Attio lifecycle audit, ownership rules, list hygiene
-- **SEO / Demand** — programmatic page generators, schema markup audits, GSC reports
+- **SEO / Demand** — programmatic page generators, schema markup audits
 - **Reporting** — Evidence/DuckDB scaffolds for any CRM source
 
 If there's something specific you'd want, [open an issue](https://github.com/NachoLafuente/5050-gtm/issues).
