@@ -1,9 +1,7 @@
-"""Build the full Point Nine cohort analysis from a normalized customer list +
+"""Build the full SaaS cohort analysis from a normalized customer list +
 revenue events (+ optional CACs).
 
-Reference: https://medium.com/point-nine-news/the-p9-guide-to-cohort-analysis-in-saas-v0-9-63ce366ab427
-
-Output structure (`build_p9_cohorts` returns):
+Output structure (`build_cohorts` returns):
   cohorts: ordered list of cohort labels (e.g. ['2026-01', '2026-02', ...])
   cohort_start_dates: {cohort: first-of-month date}
   max_observable_lt: {cohort: int} - latest lifetime month observable per cohort
@@ -93,7 +91,7 @@ def _match(event: dict, idx: dict[tuple, dict]) -> dict | None:
     return None
 
 
-def build_p9_cohorts(
+def build_cohorts(
     customers: list[dict],
     revenue: list[dict],
     cacs: dict[str, float] | None = None,
@@ -225,18 +223,18 @@ def build_p9_cohorts(
     }
 
 
-def quick_summary(p9: dict) -> str:
-    cohorts = p9["cohorts"]
+def quick_summary(data: dict) -> str:
+    cohorts = data["cohorts"]
     if not cohorts:
         return "no cohorts"
     first = cohorts[0]
-    base = p9["n_customers_base"][first]
-    base_mrr = p9["cohort_mrr_base"][first]
-    max_lt = p9["max_observable_lt"][first]
+    base = data["n_customers_base"][first]
+    base_mrr = data["cohort_mrr_base"][first]
+    max_lt = data["max_observable_lt"][first]
     if max_lt < 1 or base == 0:
         return f"{first} cohort: {base} customers (insufficient history for retention)"
-    last_pct = p9["tables"]["pct_retained_mrr"][first].get(max_lt, 0) * 100
-    last_n = p9["tables"]["retained_customers"][first].get(max_lt, 0)
+    last_pct = data["tables"]["pct_retained_mrr"][first].get(max_lt, 0) * 100
+    last_n = data["tables"]["retained_customers"][first].get(max_lt, 0)
     return (
         f"{first} cohort: {base} customers @ ${base_mrr:,.0f} MRR → "
         f"M{max_lt}: {last_n} customers, {last_pct:.0f}% MRR retained"

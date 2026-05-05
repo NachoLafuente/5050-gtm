@@ -1,11 +1,11 @@
 ---
 name: cohort-analysis
-description: Build a full Point Nine SaaS cohort analysis from a CRM (Attio/Stripe/CSV) joined to revenue (Stripe/Attio/CSV). Outputs a P9-styled Excel workbook with conditional formatting (Customer Churn, MRR Churn, CAC Payback) plus per-section CSVs. Use when the user says "/cohort-analysis", "build a cohort table", "P9 cohort analysis", "retention by signup month", or "show me NRR by cohort". One-shot, no warehouse, no cron. Reference: https://medium.com/point-nine-news/the-p9-guide-to-cohort-analysis-in-saas-v0-9-63ce366ab427
+description: Build a full SaaS cohort analysis from a CRM (Attio/Stripe/CSV) joined to revenue (Stripe/Attio/CSV). Outputs a styled Excel workbook with conditional formatting (Customer Churn, MRR Churn, CAC Payback) plus per-section CSVs. Use when the user says "/cohort-analysis", "build a cohort table", "cohort analysis for <client>", "retention by signup month", or "show me NRR by cohort". One-shot, no warehouse, no cron.
 ---
 
-# Cohort Analysis (Point Nine template)
+# Cohort Analysis
 
-Builds the full P9 cohort suite from your CRM + money source: 11 sub-tables across 3 sections (Customer Churn, MRR Churn, CAC Payback) in a single Excel workbook with green→red conditional formatting, plus per-section CSVs for SQL/raw consumption.
+Builds the full SaaS cohort suite from a CRM + money source: 11 sub-tables across 3 sections (Customer Churn, MRR Churn, CAC Payback) in a single Excel workbook with green→red conditional formatting, plus per-section CSVs for SQL/raw consumption.
 
 ## Step 1 — Ask the user 3 questions (5 if they want CAC payback)
 
@@ -86,10 +86,10 @@ Optional flags:
 
 Default output (`--output all`) writes to `/tmp/cohort-<client>-<date>/`:
 
-- **`cohort_workbook.xlsx`** — the Point Nine-styled Excel file (open in Excel/Numbers/Sheets). Three stacked sections with conditional formatting: Customer Churn, MRR Churn, CAC Payback (only if CACs given).
+- **`cohort_workbook.xlsx`** — the styled Excel file (open in Excel/Numbers/Sheets). Three stacked sections with conditional formatting: Customer Churn, MRR Churn, CAC Payback (only if CACs given).
 - `cohort_table.csv` — headline retained-MRR matrix (familiar shape, opens directly)
 - `00_summary.csv` — one row per cohort: base counts, base MRR, CAC, profitable-since
-- `01_retained_customers.csv` through `11_cac_payback_cumulative_gross_profit.csv` — every P9 sub-table as its own CSV
+- `01_retained_customers.csv` through `11_cac_payback_cumulative_gross_profit.csv` — every sub-table as its own CSV
 - `audit_customers.csv` + `audit_revenue.csv` — everything that fed the join, for traceability
 
 ## Step 5 — After running
@@ -102,7 +102,7 @@ Show a 4-line summary:
 
 ## When to use
 
-- User says `/cohort-analysis` or "P9 cohort analysis for <client>"
+- User says `/cohort-analysis` or "cohort analysis for <client>"
 - A client asks for retention/NRR by signup month, gross profit per cohort, or CAC payback
 - Quarterly review of a SaaS book of business
 - A founder is preparing investor materials and needs to show NRR + payback

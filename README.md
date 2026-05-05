@@ -111,6 +111,12 @@ Match the tone: direct, no fluff, honest about what doesn't work.
 
 ---
 
+## Inspiration
+
+Learning from the best — [Point Nine](https://www.pointnine.com/) and other great B2B-SaaS investors who publish their playbooks publicly (Bessemer, a16z, OpenView, Lenny). These skills turn proven frameworks into one-shot scripts you can run on your own data.
+
+---
+
 ## Star history
 
 If this is useful, a star helps a lot — both for visibility and for keeping us motivated to ship more.

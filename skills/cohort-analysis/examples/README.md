@@ -24,9 +24,9 @@ open /tmp/cohort-demo/cohort_workbook.xlsx
 
 ## What you get
 
-- `cohort_workbook.xlsx` — Point Nine-styled workbook with three sections (Customer Churn, MRR Churn, CAC Payback) and conditional formatting
+- `cohort_workbook.xlsx` — styled workbook with three sections (Customer Churn, MRR Churn, CAC Payback) and conditional formatting
 - 11 per-section CSVs — one per metric, for SQL/raw consumption
 - `00_summary.csv` — base counts, base MRR, profitable-since per cohort
 - `audit_customers.csv` + `audit_revenue.csv` — what got included as input
 
-The fixture is generated so the Jan-2026 cohort starts at ~$8,000 MRR and decays to ~$6,300 by M9 (~80% NRR), with CAC payback hitting around M7-M8 — close enough to the canonical P9 template numbers that you can sanity-check the math.
+The fixture is generated so the Jan-2026 cohort starts at ~$8,000 MRR and decays to ~$6,300 by M9 (~80% NRR), with CAC payback hitting around M7-M8 — typical mid-stage B2B-SaaS shape that you can sanity-check the math against.

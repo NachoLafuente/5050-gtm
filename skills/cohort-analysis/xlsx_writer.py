@@ -1,7 +1,4 @@
-"""Write the P9-styled cohort workbook with conditional formatting.
-
-Layout mirrors the canonical Point Nine Cohort Analysis Template:
-https://docs.google.com/spreadsheets/d/1WfI9EIQPiIccw3JkJfXgW6HqZU68BPsZcnSwnho7qgg/
+"""Write the styled cohort workbook with conditional formatting.
 
 One sheet, three sections stacked vertically:
   1. Customer Churn      (5 sub-tables)
@@ -115,28 +112,28 @@ def _signed_churn_scale():
     )
 
 
-def write_p9_workbook(out_path: Path, p9: dict) -> None:
+def write_cohort_workbook(out_path: Path, data: dict) -> None:
     wb = Workbook()
     ws = wb.active
     ws.title = "Cohort Analysis"
 
-    cohorts = p9["cohorts"]
-    global_max_lt = p9["global_max_lt"]
+    cohorts = data["cohorts"]
+    global_max_lt = data["global_max_lt"]
     lt_cols = list(range(global_max_lt + 1))
     lt_labels = [f"M{lt}" for lt in lt_cols]
 
-    n_base = p9["n_customers_base"]
-    mrr_base = p9["cohort_mrr_base"]
-    tables = p9["tables"]
-    profitable_since = p9["profitable_since"]
-    cacs = p9["cacs"]
-    gross_margin = p9["gross_margin"]
+    n_base = data["n_customers_base"]
+    mrr_base = data["cohort_mrr_base"]
+    tables = data["tables"]
+    profitable_since = data["profitable_since"]
+    cacs = data["cacs"]
+    gross_margin = data["gross_margin"]
 
     row = 1
-    title = ws.cell(row=row, column=2, value="Cohort Analysis (Point Nine template)")
+    title = ws.cell(row=row, column=2, value="Cohort Analysis")
     title.font = Font(bold=True, size=18)
     row += 1
-    cutoff = p9.get("cutoff_date")
+    cutoff = data.get("cutoff_date")
     subtitle_text = (
         f"Gross margin: {gross_margin*100:.0f}%   "
         f"Data through: {cutoff}   "

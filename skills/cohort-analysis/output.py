@@ -1,4 +1,4 @@
-"""Output writers — P9-style xlsx workbook + per-section CSVs + audit trail.
+"""Output writers — styled xlsx workbook + per-section CSVs + audit trail.
 
 Optional: SQL DDL dump, DuckDB + Evidence scaffold.
 """
@@ -34,15 +34,15 @@ def _write_table_csv(path: Path, table: dict, cohorts: list, max_lt: int):
             w.writerow([cohort] + [row_data.get(lt, "") for lt in range(max_lt + 1)])
 
 
-def write_p9_csvs(out_dir: Path, p9: dict):
-    """Write 11 sub-table CSVs (one per P9 metric)."""
-    cohorts = p9["cohorts"]
-    max_lt = p9["global_max_lt"]
+def write_cohort_csvs(out_dir: Path, data: dict):
+    """Write 11 sub-table CSVs (one per cohort metric)."""
+    cohorts = data["cohorts"]
+    max_lt = data["global_max_lt"]
     for key, filename in _TABLE_FILENAMES.items():
-        _write_table_csv(out_dir / filename, p9["tables"][key], cohorts, max_lt)
+        _write_table_csv(out_dir / filename, data["tables"][key], cohorts, max_lt)
 
     # Headline cohort_table.csv = retained MRR (the most familiar shape)
-    _write_table_csv(out_dir / "cohort_table.csv", p9["tables"]["retained_mrr"], cohorts, max_lt)
+    _write_table_csv(out_dir / "cohort_table.csv", data["tables"]["retained_mrr"], cohorts, max_lt)
 
     # Summary CSV — base counts, base MRR, profitable_since, CAC
     with (out_dir / "00_summary.csv").open("w", newline="") as f:
@@ -50,14 +50,14 @@ def write_p9_csvs(out_dir: Path, p9: dict):
         w.writerow(["cohort", "n_customers_base", "cohort_mrr_base",
                     "cac", "profitable_since", "max_observable_lt"])
         for c in cohorts:
-            since = p9["profitable_since"].get(c)
+            since = data["profitable_since"].get(c)
             w.writerow([
                 c,
-                p9["n_customers_base"][c],
-                round(p9["cohort_mrr_base"][c], 2),
-                round(p9["cacs"].get(c, 0), 2) if p9["cacs"] else "",
-                f"M{since}" if since is not None else ("Not yet profitable" if p9["cacs"] else ""),
-                p9["max_observable_lt"][c],
+                data["n_customers_base"][c],
+                round(data["cohort_mrr_base"][c], 2),
+                round(data["cacs"].get(c, 0), 2) if data["cacs"] else "",
+                f"M{since}" if since is not None else ("Not yet profitable" if data["cacs"] else ""),
+                data["max_observable_lt"][c],
             ])
 
 
@@ -80,20 +80,20 @@ def write_audit(out_dir: Path, customers: list, revenue: list):
             w.writerow({k: r.get(k, "") for k in w.fieldnames})
 
 
-def write_xlsx(out_dir: Path, p9: dict):
-    """Write the P9-styled .xlsx workbook with conditional formatting."""
-    from xlsx_writer import write_p9_workbook
-    write_p9_workbook(out_dir / "cohort_workbook.xlsx", p9)
+def write_xlsx(out_dir: Path, data: dict):
+    """Write the styled .xlsx workbook with conditional formatting."""
+    from xlsx_writer import write_cohort_workbook
+    write_cohort_workbook(out_dir / "cohort_workbook.xlsx", data)
 
 
-def write_sql(out_dir: Path, p9: dict, customers: list, revenue: list):
+def write_sql(out_dir: Path, data: dict, customers: list, revenue: list):
     """Dump everything as SQL DDL + INSERTs."""
     sql_path = out_dir / "cohort.sql"
-    cohorts = p9["cohorts"]
-    max_lt = p9["global_max_lt"]
+    cohorts = data["cohorts"]
+    max_lt = data["global_max_lt"]
 
     lines = [
-        "-- P9 cohort analysis — DDL + data. Run in any SQL engine.",
+        "-- Cohort analysis — DDL + data. Run in any SQL engine.",
         "DROP TABLE IF EXISTS customers;",
         "DROP TABLE IF EXISTS revenue;",
         "DROP TABLE IF EXISTS cohort_metrics;",
@@ -133,7 +133,7 @@ def write_sql(out_dir: Path, p9: dict, customers: list, revenue: list):
         )
 
     for metric_key in _TABLE_FILENAMES.keys():
-        table = p9["tables"][metric_key]
+        table = data["tables"][metric_key]
         for cohort in cohorts:
             for lt in range(max_lt + 1):
                 v = table.get(cohort, {}).get(lt)
@@ -154,7 +154,7 @@ def _sql(v) -> str:
     return "'" + str(v).replace("'", "''") + "'"
 
 
-def write_evidence(out_dir: Path, p9: dict, customers: list, revenue: list):
+def write_evidence(out_dir: Path, data: dict, customers: list, revenue: list):
     """DuckDB file + Evidence project scaffold."""
     import duckdb
 
@@ -185,8 +185,8 @@ def write_evidence(out_dir: Path, p9: dict, customers: list, revenue: list):
     )
     rows = []
     for metric_key in _TABLE_FILENAMES.keys():
-        table = p9["tables"][metric_key]
-        for cohort in p9["cohorts"]:
+        table = data["tables"][metric_key]
+        for cohort in data["cohorts"]:
             for lt, v in table.get(cohort, {}).items():
                 rows.append((cohort, lt, metric_key, float(v)))
     con.executemany("INSERT INTO cohort_metrics VALUES (?, ?, ?, ?)", rows)

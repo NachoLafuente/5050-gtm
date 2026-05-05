@@ -1,7 +1,7 @@
-"""Cohort analysis runner — Point Nine template.
+"""Cohort analysis runner.
 
 Asks 3 (or 5) CLI args worth of questions, pulls from CRM + money source,
-builds the full P9 cohort suite, writes the .xlsx workbook + per-section CSVs.
+builds the full cohort suite, writes the .xlsx workbook + per-section CSVs.
 """
 
 from __future__ import annotations
@@ -17,8 +17,8 @@ from dotenv import load_dotenv
 SKILL_DIR = Path(__file__).parent
 sys.path.insert(0, str(SKILL_DIR))
 
-from cohort import build_p9_cohorts, quick_summary
-from output import write_audit, write_evidence, write_p9_csvs, write_sql, write_xlsx
+from cohort import build_cohorts, quick_summary
+from output import write_audit, write_cohort_csvs, write_evidence, write_sql, write_xlsx
 from pullers import attio, csv_source, stripe_source
 
 load_dotenv()
@@ -71,7 +71,7 @@ def pull_revenue(args) -> list[dict]:
 
 def main():
     p = argparse.ArgumentParser(
-        description="Build the Point Nine cohort analysis from your CRM + money source.",
+        description="Build a SaaS cohort analysis from your CRM + money source.",
     )
     p.add_argument("--crm", choices=["attio", "stripe", "csv"])
     p.add_argument("--money", choices=["stripe", "attio", "csv"])
@@ -144,7 +144,7 @@ def main():
         cacs = csv_source.pull_cacs(args.cacs)
         print(f"  {len(cacs)} CAC values loaded")
 
-    p9 = build_p9_cohorts(
+    data = build_cohorts(
         customers=customers,
         revenue=revenue,
         cacs=cacs,
@@ -155,28 +155,28 @@ def main():
     write_audit(out_dir, customers, revenue)
 
     if args.output in ("all", "csv"):
-        write_p9_csvs(out_dir, p9)
+        write_cohort_csvs(out_dir, data)
     if args.output in ("all", "xlsx"):
         try:
-            write_xlsx(out_dir, p9)
+            write_xlsx(out_dir, data)
         except ImportError:
             print("  (skipping xlsx — `pip install openpyxl` to enable)")
     if args.output == "sql":
-        write_p9_csvs(out_dir, p9)
-        write_sql(out_dir, p9, customers, revenue)
+        write_cohort_csvs(out_dir, data)
+        write_sql(out_dir, data, customers, revenue)
     if args.output == "evidence":
-        write_p9_csvs(out_dir, p9)
-        write_evidence(out_dir, p9, customers, revenue)
+        write_cohort_csvs(out_dir, data)
+        write_evidence(out_dir, data, customers, revenue)
 
     print()
     print(f"Done. {len(customers)} customers, {len(revenue)} events, "
-          f"{len(p9['cohorts'])} cohorts.")
+          f"{len(data['cohorts'])} cohorts.")
     if args.output in ("all", "xlsx"):
         print(f"  → {out_dir}/cohort_workbook.xlsx (open in Excel)")
     print(f"  → {out_dir}/  (per-section CSVs + audit trail)")
-    print(f"  → {quick_summary(p9)}")
+    print(f"  → {quick_summary(data)}")
     if cacs:
-        unprofitable = [c for c, m in p9["profitable_since"].items() if m is None]
+        unprofitable = [c for c, m in data["profitable_since"].items() if m is None]
         if unprofitable:
             print(f"  → CAC payback: {len(unprofitable)} cohort(s) not yet profitable")
         else:
