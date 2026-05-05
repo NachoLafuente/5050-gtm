@@ -2,6 +2,7 @@
 
 Customers CSV columns: customer_id, email, signup_date [, name, domain]
 Revenue CSV columns:   customer_id (or email), event_date, amount [, currency]
+CACs CSV columns:      cohort, cac_amount
 """
 
 from __future__ import annotations
@@ -38,4 +39,17 @@ def pull_revenue(path: str) -> list[dict]:
                 "amount": float(amount),
                 "currency": row.get("currency"),
             })
+    return out
+
+
+def pull_cacs(path: str) -> dict[str, float]:
+    """Load a CAC-per-cohort CSV. Columns: cohort, cac_amount."""
+    out: dict[str, float] = {}
+    with open(Path(path).expanduser()) as f:
+        for row in csv.DictReader(f):
+            cohort = (row.get("cohort") or "").strip()
+            amount = row.get("cac_amount") or row.get("cac")
+            if not cohort or not amount:
+                continue
+            out[cohort] = float(amount)
     return out

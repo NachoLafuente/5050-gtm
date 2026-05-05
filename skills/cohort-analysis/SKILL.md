@@ -1,15 +1,15 @@
 ---
 name: cohort-analysis
-description: Build a customer cohort table by joining CRM signup data with revenue/invoice data. Default output is CSV (Excel-friendly), with SQL or DuckDB+Evidence as upgrades. Use when the user says "/cohort-analysis", "build a cohort table", "cohort analysis for <client>", "retention by signup month", or "show me NRR by cohort". No cron, no warehouse — one-shot, interactive. Asks 3 questions up front: which CRM, which money source, which output format.
+description: Build a full Point Nine SaaS cohort analysis from a CRM (Attio/Stripe/CSV) joined to revenue (Stripe/Attio/CSV). Outputs a P9-styled Excel workbook with conditional formatting (Customer Churn, MRR Churn, CAC Payback) plus per-section CSVs. Use when the user says "/cohort-analysis", "build a cohort table", "P9 cohort analysis", "retention by signup month", or "show me NRR by cohort". One-shot, no warehouse, no cron. Reference: https://medium.com/point-nine-news/the-p9-guide-to-cohort-analysis-in-saas-v0-9-63ce366ab427
 ---
 
-# Cohort Analysis
+# Cohort Analysis (Point Nine template)
 
-Build a customer cohort retention table from a CRM (signup date) joined to a money source (invoices / charges). One-shot, no scheduling. Default output is CSV — clients open it in Excel.
+Builds the full P9 cohort suite from your CRM + money source: 11 sub-tables across 3 sections (Customer Churn, MRR Churn, CAC Payback) in a single Excel workbook with green→red conditional formatting, plus per-section CSVs for SQL/raw consumption.
 
-## Step 1 — Ask 3 questions before doing anything
+## Step 1 — Ask the user 3 questions (5 if they want CAC payback)
 
-Ask these in order. Don't skip. Don't pick defaults silently.
+Ask in order. Don't skip. Don't pick defaults silently.
 
 1. **Where do your clients live?** (CRM source)
    - `attio` — Attio Persons or Companies, `created_at` is the cohort key
@@ -21,10 +21,19 @@ Ask these in order. Don't skip. Don't pick defaults silently.
    - `attio` — currency attribute on a CRM record (requires extra info — see Step 1b)
    - `csv` — path to CSV with columns `customer_id` (or `email`), `event_date`, `amount`
 
-3. **Output format?**
-   - `csv` (default — opens in Excel)
-   - `sql` — DDL + INSERT statements you can run in any SQL engine
-   - `evidence` — DuckDB file + Evidence project scaffold (suggest only if they want a live dashboard)
+3. **Want CAC payback analysis?** (optional)
+   - `yes` — they paste a path to a `cohort,cac_amount` CSV. Section 3 of the workbook will show cumulative gross profit vs CAC and flag the lifetime month each cohort breaks even.
+   - `no / skip` — workbook will only include the first two sections.
+
+4. **Gross margin?** (only if they said yes to #3)
+   - Default is `0.8` (80%). Most SaaS companies are 70-85%.
+
+5. **Output format?**
+   - `all` (default — xlsx workbook + per-section CSVs)
+   - `xlsx` — workbook only
+   - `csv` — per-section CSVs only
+   - `sql` — also dump SQL DDL+inserts
+   - `evidence` — also bootstrap a DuckDB+Evidence project
 
 ## Step 1b — Attio money source disclaimer (IMPORTANT)
 
@@ -44,8 +53,6 @@ Wait for them to give you the 3 slugs (or 2, if they're skipping `date_churned`)
 
 ## Step 2 — Confirm env vars are set
 
-After they answer, list which env vars need to be in `.env` and check them:
-
 | Source | Env var |
 |--------|---------|
 | Attio (CRM or money) | `ATTIO_API_KEY` |
@@ -60,7 +67,9 @@ Run `python skills/cohort-analysis/run.py --check-env --crm <X> --money <Y>` to 
 python skills/cohort-analysis/run.py \
   --crm <attio|stripe|csv> \
   --money <stripe|attio|csv> \
-  --output <csv|sql|evidence> \
+  --cacs <path-to-cacs.csv> \           # optional, enables CAC payback section
+  --gross-margin 0.8 \                  # default 0.8
+  --output <all|xlsx|csv|sql|evidence> \
   --out-dir /tmp/cohort-<client>-<date>
 ```
 
@@ -71,46 +80,53 @@ Optional flags:
 - `--attio-date-churned-attr <slug>` (optional, only if `--money attio`)
 - `--csv-customers <path>` (only if `--crm csv`)
 - `--csv-revenue <path>` (only if `--money csv`)
-- `--metric revenue|count` (default `revenue` — sum of amounts; `count` = customers still paying)
 - `--cohort-grain month|quarter` (default `month`)
 
-Output goes to `/tmp/cohort-<client>-<date>/`:
-- `cohort_table.csv` — rows = signup cohort, cols = M0/M1/M2…
-- `customers.csv` — normalized signup list (audit trail)
-- `revenue.csv` — normalized revenue events (audit trail)
-- `cohort.sql` (only if `--output sql`)
-- `cohort.duckdb` + `evidence/` (only if `--output evidence`)
+## Step 4 — Output
 
-## Step 4 — After running
+Default output (`--output all`) writes to `/tmp/cohort-<client>-<date>/`:
+
+- **`cohort_workbook.xlsx`** — the Point Nine-styled Excel file (open in Excel/Numbers/Sheets). Three stacked sections with conditional formatting: Customer Churn, MRR Churn, CAC Payback (only if CACs given).
+- `cohort_table.csv` — headline retained-MRR matrix (familiar shape, opens directly)
+- `00_summary.csv` — one row per cohort: base counts, base MRR, CAC, profitable-since
+- `01_retained_customers.csv` through `11_cac_payback_cumulative_gross_profit.csv` — every P9 sub-table as its own CSV
+- `audit_customers.csv` + `audit_revenue.csv` — everything that fed the join, for traceability
+
+## Step 5 — After running
 
 Show a 4-line summary:
 - N customers, N revenue events, N cohorts
-- Path to `cohort_table.csv`
-- One-line read of the matrix (e.g. "Jan-2025 cohort retained 78% of M0 revenue at M6")
-- If they picked CSV and the data looks rich, suggest: "If you want a live dashboard, re-run with `--output evidence` — it'll bootstrap an Evidence project from a DuckDB file."
+- Path to `cohort_workbook.xlsx`
+- One-line read of the matrix (`quick_summary` output: e.g. "Jan-2026 cohort: 80 customers @ $7,851 MRR → M9: 64 customers, 81% MRR retained")
+- If CACs were given: how many cohorts have paid back, how many haven't.
 
 ## When to use
 
-- User says `/cohort-analysis` or "cohort analysis for <client>"
-- A client asks for retention/NRR by signup month
+- User says `/cohort-analysis` or "P9 cohort analysis for <client>"
+- A client asks for retention/NRR by signup month, gross profit per cohort, or CAC payback
 - Quarterly review of a SaaS book of business
+- A founder is preparing investor materials and needs to show NRR + payback
 
 ## When NOT to use
 
 - The client wants a continuously refreshing dashboard → recommend ChartMogul or Baremetrics, don't build this.
-- The client has <10 customers → cohorts aren't statistically useful, just show a churn list instead.
+- The client has <10 customers per cohort → cohorts aren't statistically useful, just show a churn list instead.
 
 ## Try it without API keys
 
-The `examples/` folder has a fixture you can run end-to-end with no setup:
+The `examples/` folder ships with a richer fixture (8 cohorts, ~12 months of history, CAC values). Run end-to-end:
 
 ```bash
 python skills/cohort-analysis/run.py \
   --crm csv --money csv \
   --csv-customers skills/cohort-analysis/examples/customers.csv \
   --csv-revenue skills/cohort-analysis/examples/revenue.csv \
-  --output csv \
+  --cacs skills/cohort-analysis/examples/cacs.csv \
+  --gross-margin 0.8 \
+  --output all \
   --out-dir /tmp/cohort-demo
+
+open /tmp/cohort-demo/cohort_workbook.xlsx
 ```
 
 ## Notes
@@ -118,3 +134,4 @@ python skills/cohort-analysis/run.py \
 - Joins are on `email` (lowercased) by default. Stripe customers usually carry email; Attio Persons too. For Companies → Stripe, falls back to `domain` match.
 - CSV mode is the universal escape hatch — if the user has an "alternative" billing system (Qonto, Chargebee, custom), they export to CSV and we ingest it.
 - No data is sent anywhere. Everything stays local in `/tmp/cohort-<client>-<date>/`.
+- The xlsx writer requires `openpyxl`. If it's not installed, the skill still produces all the CSVs; the .xlsx is skipped with a friendly message.

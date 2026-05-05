@@ -1,5 +1,8 @@
-"""Cohort analysis runner. Asks 3 questions worth of CLI args, pulls from CRM
-+ money source, joins, writes a cohort table."""
+"""Cohort analysis runner — Point Nine template.
+
+Asks 3 (or 5) CLI args worth of questions, pulls from CRM + money source,
+builds the full P9 cohort suite, writes the .xlsx workbook + per-section CSVs.
+"""
 
 from __future__ import annotations
 
@@ -14,8 +17,8 @@ from dotenv import load_dotenv
 SKILL_DIR = Path(__file__).parent
 sys.path.insert(0, str(SKILL_DIR))
 
-from cohort import build_matrix
-from output import write_csv, write_evidence, write_sql
+from cohort import build_p9_cohorts, quick_summary
+from output import write_audit, write_evidence, write_p9_csvs, write_sql, write_xlsx
 from pullers import attio, csv_source, stripe_source
 
 load_dotenv()
@@ -67,10 +70,17 @@ def pull_revenue(args) -> list[dict]:
 
 
 def main():
-    p = argparse.ArgumentParser()
-    p.add_argument("--crm", choices=["attio", "stripe", "csv"], required=False)
-    p.add_argument("--money", choices=["stripe", "attio", "csv"], required=False)
-    p.add_argument("--output", choices=["csv", "sql", "evidence"], default="csv")
+    p = argparse.ArgumentParser(
+        description="Build the Point Nine cohort analysis from your CRM + money source.",
+    )
+    p.add_argument("--crm", choices=["attio", "stripe", "csv"])
+    p.add_argument("--money", choices=["stripe", "attio", "csv"])
+    p.add_argument(
+        "--output",
+        choices=["xlsx", "csv", "all", "sql", "evidence"],
+        default="all",
+        help="all = xlsx + per-section CSVs (default). xlsx-only or csv-only also valid.",
+    )
     p.add_argument("--out-dir", default=None)
     p.add_argument("--attio-object", default="companies")
     p.add_argument("--attio-amount-attr", default=None)
@@ -78,7 +88,17 @@ def main():
     p.add_argument("--attio-date-churned-attr", default=None)
     p.add_argument("--csv-customers", default=None)
     p.add_argument("--csv-revenue", default=None)
-    p.add_argument("--metric", choices=["revenue", "count"], default="revenue")
+    p.add_argument(
+        "--cacs",
+        default=None,
+        help="Path to a CSV with columns: cohort, cac_amount. Enables CAC payback section.",
+    )
+    p.add_argument(
+        "--gross-margin",
+        type=float,
+        default=0.8,
+        help="Gross margin as a decimal (default 0.8 = 80%%). Used for CAC payback.",
+    )
     p.add_argument("--cohort-grain", choices=["month", "quarter"], default="month")
     p.add_argument("--check-env", action="store_true")
     args = p.parse_args()
@@ -105,6 +125,8 @@ def main():
         sys.exit("--csv-customers is required when --crm csv")
     if args.money == "csv" and not args.csv_revenue:
         sys.exit("--csv-revenue is required when --money csv")
+    if not 0 < args.gross_margin <= 1:
+        sys.exit("--gross-margin must be between 0 and 1 (e.g. 0.8 for 80%)")
 
     out_dir = Path(args.out_dir or f"/tmp/cohort-{datetime.now():%Y-%m-%d-%H%M%S}")
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -117,25 +139,48 @@ def main():
     revenue = pull_revenue(args)
     print(f"  {len(revenue)} revenue events")
 
-    matrix, meta = build_matrix(
+    cacs = {}
+    if args.cacs:
+        cacs = csv_source.pull_cacs(args.cacs)
+        print(f"  {len(cacs)} CAC values loaded")
+
+    p9 = build_p9_cohorts(
         customers=customers,
         revenue=revenue,
-        metric=args.metric,
+        cacs=cacs,
+        gross_margin=args.gross_margin,
         grain=args.cohort_grain,
     )
 
-    write_csv(out_dir, matrix, customers, revenue)
+    write_audit(out_dir, customers, revenue)
+
+    if args.output in ("all", "csv"):
+        write_p9_csvs(out_dir, p9)
+    if args.output in ("all", "xlsx"):
+        try:
+            write_xlsx(out_dir, p9)
+        except ImportError:
+            print("  (skipping xlsx — `pip install openpyxl` to enable)")
     if args.output == "sql":
-        write_sql(out_dir, matrix, customers, revenue)
-    elif args.output == "evidence":
-        write_evidence(out_dir, matrix, customers, revenue)
+        write_p9_csvs(out_dir, p9)
+        write_sql(out_dir, p9, customers, revenue)
+    if args.output == "evidence":
+        write_p9_csvs(out_dir, p9)
+        write_evidence(out_dir, p9, customers, revenue)
 
     print()
-    print(f"Done. {meta['n_customers']} customers, {meta['n_events']} events, "
-          f"{meta['n_cohorts']} cohorts.")
-    print(f"  → {out_dir}/cohort_table.csv")
-    if meta.get("highlight"):
-        print(f"  → {meta['highlight']}")
+    print(f"Done. {len(customers)} customers, {len(revenue)} events, "
+          f"{len(p9['cohorts'])} cohorts.")
+    if args.output in ("all", "xlsx"):
+        print(f"  → {out_dir}/cohort_workbook.xlsx (open in Excel)")
+    print(f"  → {out_dir}/  (per-section CSVs + audit trail)")
+    print(f"  → {quick_summary(p9)}")
+    if cacs:
+        unprofitable = [c for c, m in p9["profitable_since"].items() if m is None]
+        if unprofitable:
+            print(f"  → CAC payback: {len(unprofitable)} cohort(s) not yet profitable")
+        else:
+            print("  → CAC payback: every cohort with a CAC value has paid back ✓")
 
 
 if __name__ == "__main__":
