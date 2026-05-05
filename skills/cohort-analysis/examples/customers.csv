@@ -1,0 +1,8 @@
+customer_id,email,signup_date,name
+c1,alice@acme.com,2026-01-15,Acme Corp
+c2,bob@beta.io,2026-01-20,Beta Industries
+c3,carol@gamma.co,2026-02-10,Gamma Holdings
+c4,dan@delta.com,2026-02-25,Delta Logistics
+c5,eve@epsilon.com,2026-03-05,Epsilon Bio
+c6,frank@zeta.com,2026-03-12,Zeta Studio
+c7,grace@eta.com,2026-04-02,Eta Capital

@@ -1,0 +1,5 @@
+requests>=2.31
+python-dotenv>=1.0
+stripe>=8.0
+# Optional — only needed if you use --output evidence
+duckdb>=0.10
