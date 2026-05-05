@@ -1,0 +1,8 @@
+{
+  "arpu": 200.0,
+  "churn_rate": 0.03,
+  "expansion_rate": 0.005,
+  "gross_margin": 0.78,
+  "cac": 1500.0,
+  "inference_cost": 0.0
+}

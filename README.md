@@ -23,6 +23,7 @@ The skills here are productized versions of work we do at 5050Growth on real cli
 | Skill | What it does |
 |---|---|
 | [`/cohort-analysis`](skills/cohort-analysis/) | Full SaaS cohort analysis from your CRM (Attio/Stripe/CSV) joined to revenue (Stripe/Attio/CSV). Outputs a styled Excel workbook + 11 per-section CSVs. |
+| [`/ltv-cac`](skills/ltv-cac/) | Forward-looking LTV / CAC / payback model. Four formulas side by side (Skok basic, NDR-adjusted, AI-inference-adjusted, Sequoia contribution-margin) plus a sensitivity heatmap and a 36-month synthetic cohort projection. Verdict anchored on Skok's 3:1 rule. |
 
 **What you get from `/cohort-analysis`** — every metric a B2B-SaaS investor or founder asks for, in one workbook:
 
@@ -40,6 +41,22 @@ The skills here are productized versions of work we do at 5050Growth on real cli
 | **Lifetime month cutoff** | Per-cohort observable horizon, inferred from your data — newer cohorts only show what's been observed. | Header row + summary CSV |
 
 CAC payback is opt-in (provide a `cohort,cac_amount` CSV). Gross margin defaults to 80%, configurable. Everything else falls out of customers + revenue alone.
+
+**What you get from `/ltv-cac`** — forward-looking unit economics from a handful of inputs:
+
+| KPI | What it means | Where it lives |
+|---|---|---|
+| **Skok basic LTV** | `ARPU × GM / churn` — the canonical 3:1 rule reference | Verdict sheet |
+| **NDR-adjusted LTV** | `ARPU × GM / (churn − expansion)` — credits net dollar retention | Verdict sheet |
+| **AI-adjusted LTV** | `(ARPU × GM − inference) / churn` — handles variable inference cost erosion | Verdict sheet |
+| **Sequoia contribution-margin LTV** | Combines NDR + variable-cost adjustments | Verdict sheet |
+| **CAC payback** | Months to recover CAC; basic and AI-adjusted | Verdict sheet |
+| **LTV/CAC verdict** | 🔴 underwater / 🟡 tight / 🟢 healthy / 🟦 under-investing — anchored on Skok 3:1 | Verdict sheet |
+| **NDR** | Monthly + annual-compounded net dollar retention | Verdict sheet |
+| **Sensitivity heatmap** | LTV/CAC across churn (1–10%) × gross margin (50–90%) — see what cutting churn or improving GM does | Sensitivity sheet |
+| **Cohort projection** | 100-customer synthetic cohort over 36 months: customers retained, MRR, cumulative gross profit vs. CAC, line chart | Cohort Projection sheet |
+
+Sources cited inline: Skok (Matrix), a16z, Sequoia, Tunguz.
 
 ### SEO / Demand
 
