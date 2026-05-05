@@ -82,7 +82,37 @@ Optional flags:
 - `--csv-revenue <path>` (only if `--money csv`)
 - `--cohort-grain month|quarter` (default `month`)
 
-## Step 4 — Output
+## Step 4 — KPIs the user gets
+
+Every run produces these metrics for every cohort × lifetime month:
+
+**Customer-side (Section 1 of the workbook — 5 sub-tables)**
+- **Retained customers** — count of cohort C still paying at lifetime month M
+- **Churned customers** — count who churned that specific period
+- **% retained customers** — customer retention curve (the "GRR shape")
+- **% churned vs base** — monthly churn rate normalized to cohort starting size
+- **% churned vs previous month** — period-over-period churn rate
+
+**Revenue-side (Section 2 of the workbook — 5 sub-tables)**
+- **Retained MRR** — dollars each cohort is paying every month since signup
+- **MRR churn** — signed: positive = lost dollars, negative = expansion
+- **% retained MRR** — **NRR** (Net Revenue Retention), the headline VC metric
+- **% MRR churn vs base** — monthly dollar churn normalized to M0 MRR
+- **% MRR churn vs previous month** — period-over-period dollar churn
+
+**Unit economics (Section 3 of the workbook — only if `--cacs` given)**
+- **Cumulative gross profit** per cohort, month by month (`retained_mrr × gross_margin`, accumulated)
+- **CAC payback period** — first lifetime month each cohort's cumulative GP exceeds its CAC
+- **"Profitable since M_n"** flag, or "Not yet profitable"
+
+**Per-cohort base stats (in `00_summary.csv` and the workbook headers)**
+- **Cohort base size** — # of customers signed up that month
+- **M0 MRR** — initial cohort revenue
+- **CAC** (if provided)
+- **Profitable since** — computed
+- **Max observable lifetime month** — per-cohort cutoff inferred from your data
+
+## Step 5 — Output files
 
 Default output (`--output all`) writes to `/tmp/cohort-<client>-<date>/`:
 
@@ -92,7 +122,7 @@ Default output (`--output all`) writes to `/tmp/cohort-<client>-<date>/`:
 - `01_retained_customers.csv` through `11_cac_payback_cumulative_gross_profit.csv` — every sub-table as its own CSV
 - `audit_customers.csv` + `audit_revenue.csv` — everything that fed the join, for traceability
 
-## Step 5 — After running
+## Step 6 — After running
 
 Show a 4-line summary:
 - N customers, N revenue events, N cohorts

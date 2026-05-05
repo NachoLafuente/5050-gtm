@@ -22,7 +22,24 @@ The skills here are productized versions of work we do at 5050Growth on real cli
 
 | Skill | What it does |
 |---|---|
-| [`/cohort-analysis`](skills/cohort-analysis/) | Customer cohort retention table from your CRM (Attio/Stripe/CSV) joined to revenue (Stripe/Attio/CSV). Output: CSV, SQL, or DuckDB+Evidence. |
+| [`/cohort-analysis`](skills/cohort-analysis/) | Full SaaS cohort analysis from your CRM (Attio/Stripe/CSV) joined to revenue (Stripe/Attio/CSV). Outputs a styled Excel workbook + 11 per-section CSVs. |
+
+**What you get from `/cohort-analysis`** — every metric a B2B-SaaS investor or founder asks for, in one workbook:
+
+| KPI | What it means | Where it lives |
+|---|---|---|
+| **NRR** (Net Revenue Retention) | % of M0 MRR each cohort still pays at M1, M3, M6, M12… The headline retention metric. | Sheet section 2, table 3 |
+| **GRR** (Gross Revenue Retention) | Customer-side retention curve — % of each cohort still paying at M_n. | Sheet section 1, table 3 |
+| **MRR retention curve** | Dollar amount each cohort is paying every month since signup. | Sheet section 2, table 1 |
+| **Net dollar churn** | Signed: positive = churn, negative = expansion (so NDR > 100% shows green). | Sheet section 2, table 2 |
+| **Customer churn rate** | % of cohort lost each month — both vs-base (severity) and vs-previous-month (period rate). | Sheet section 1, tables 4–5 |
+| **MRR churn rate** | Same in dollars, signed so expansion is visible. | Sheet section 2, tables 4–5 |
+| **CAC payback period** | Lifetime month each cohort breaks even on its acquisition cost (given CAC + gross margin). | Sheet section 3 |
+| **Cumulative gross profit** | Dollars of GP each cohort has produced, month by month, vs their CAC. | Sheet section 3 |
+| **Cohort base size** | Customers in each signup cohort + their initial MRR (M0). | Header row of every section |
+| **Lifetime month cutoff** | Per-cohort observable horizon, inferred from your data — newer cohorts only show what's been observed. | Header row + summary CSV |
+
+CAC payback is opt-in (provide a `cohort,cac_amount` CSV). Gross margin defaults to 80%, configurable. Everything else falls out of customers + revenue alone.
 
 ### SEO / Demand
 
