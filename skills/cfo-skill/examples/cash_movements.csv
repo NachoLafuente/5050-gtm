@@ -1,0 +1,72 @@
+date,account,direction,amount,currency,counterparty,category,department,note
+2025-12-01,main,out,4200.00,EUR,Payroll Provider,payroll,operations,monthly payroll
+2025-12-02,main,out,3850.00,EUR,Stripe Inc,saas,engineering,monthly subscription
+2025-12-03,main,in,12500.00,EUR,Acme Corp,revenue,,annual prepay
+2025-12-05,main,out,1800.00,EUR,WeWork,rent,operations,office rent
+2025-12-08,main,in,2800.00,EUR,Beta Industries,revenue,,monthly subscription
+2025-12-10,main,out,950.00,EUR,Google Cloud,saas,engineering,GCP monthly
+2025-12-12,main,in,4500.00,EUR,Helios Corp,revenue,,monthly subscription
+2025-12-15,main,out,650.00,EUR,Notion Labs,saas,operations,team subscription
+2025-12-15,moss_float,out,1200.00,EUR,Moss top-up,transfer,,monthly card float
+2025-12-18,main,in,3200.00,EUR,DataDyne,revenue,,monthly subscription
+2025-12-20,main,out,2400.00,EUR,Marketing Agency,marketing,marketing,quarterly retainer
+2025-12-22,main,in,5500.00,EUR,Massive Dynamic,revenue,,monthly subscription
+2026-01-01,main,out,4200.00,EUR,Payroll Provider,payroll,operations,monthly payroll
+2026-01-02,main,out,3850.00,EUR,Stripe Inc,saas,engineering,monthly subscription
+2026-01-04,main,in,2800.00,EUR,Beta Industries,revenue,,monthly subscription
+2026-01-05,main,out,1800.00,EUR,WeWork,rent,operations,office rent
+2026-01-08,main,in,1500.00,EUR,Cosmic Labs,revenue,,monthly subscription
+2026-01-10,main,out,950.00,EUR,Google Cloud,saas,engineering,GCP monthly
+2026-01-12,main,in,4500.00,EUR,Helios Corp,revenue,,monthly subscription
+2026-01-15,main,in,3200.00,EUR,DataDyne,revenue,,monthly subscription
+2026-01-15,moss_float,out,1500.00,EUR,Moss top-up,transfer,,monthly card float
+2026-01-18,main,in,5500.00,EUR,Massive Dynamic,revenue,,monthly subscription
+2026-01-20,main,out,3500.00,EUR,LinkedIn Ads,marketing,marketing,paid acquisition
+2026-01-25,main,out,420.00,EUR,Datadog,saas,engineering,monitoring
+2026-02-01,main,out,4400.00,EUR,Payroll Provider,payroll,operations,monthly payroll incl raise
+2026-02-02,main,out,3850.00,EUR,Stripe Inc,saas,engineering,monthly subscription
+2026-02-03,main,in,2800.00,EUR,Beta Industries,revenue,,monthly subscription
+2026-02-05,main,out,1800.00,EUR,WeWork,rent,operations,office rent
+2026-02-08,main,in,1500.00,EUR,Cosmic Labs,revenue,,monthly subscription
+2026-02-10,main,out,950.00,EUR,Google Cloud,saas,engineering,GCP monthly
+2026-02-12,main,in,4500.00,EUR,Helios Corp,revenue,,monthly subscription
+2026-02-14,main,out,2200.00,EUR,Recruiting Agency,recruiting,operations,contingency fee
+2026-02-15,moss_float,out,1500.00,EUR,Moss top-up,transfer,,monthly card float
+2026-02-18,main,in,5500.00,EUR,Massive Dynamic,revenue,,monthly subscription
+2026-02-20,main,out,3500.00,EUR,LinkedIn Ads,marketing,marketing,paid acquisition
+2026-02-22,main,in,3800.00,EUR,Tyrell Corp,revenue,,monthly subscription
+2026-02-25,main,out,420.00,EUR,Datadog,saas,engineering,monitoring
+2026-03-01,main,out,4400.00,EUR,Payroll Provider,payroll,operations,monthly payroll
+2026-03-02,main,out,3850.00,EUR,Stripe Inc,saas,engineering,monthly subscription
+2026-03-05,main,out,1800.00,EUR,WeWork,rent,operations,office rent
+2026-03-08,main,in,2800.00,EUR,Beta Industries,revenue,,monthly subscription
+2026-03-10,main,out,950.00,EUR,Google Cloud,saas,engineering,GCP monthly
+2026-03-12,main,in,4500.00,EUR,Helios Corp,revenue,,monthly subscription
+2026-03-15,main,in,3200.00,EUR,DataDyne,revenue,,monthly subscription
+2026-03-15,moss_float,out,1500.00,EUR,Moss top-up,transfer,,monthly card float
+2026-03-18,main,in,5500.00,EUR,Massive Dynamic,revenue,,monthly subscription
+2026-03-20,main,out,3500.00,EUR,LinkedIn Ads,marketing,marketing,paid acquisition
+2026-03-22,main,in,3800.00,EUR,Tyrell Corp,revenue,,monthly subscription
+2026-03-25,main,out,420.00,EUR,Datadog,saas,engineering,monitoring
+2026-03-28,main,out,1100.00,EUR,Legal Counsel,legal,operations,contract review
+2026-04-01,main,out,4400.00,EUR,Payroll Provider,payroll,operations,monthly payroll
+2026-04-02,main,out,3850.00,EUR,Stripe Inc,saas,engineering,monthly subscription
+2026-04-05,main,out,1800.00,EUR,WeWork,rent,operations,office rent
+2026-04-08,main,in,2800.00,EUR,Beta Industries,revenue,,monthly subscription
+2026-04-10,main,out,950.00,EUR,Google Cloud,saas,engineering,GCP monthly
+2026-04-12,main,in,4500.00,EUR,Helios Corp,revenue,,monthly subscription
+2026-04-12,main,out,4500.00,EUR,New hire signing,recruiting,operations,signing bonus
+2026-04-15,main,in,3200.00,EUR,DataDyne,revenue,,monthly subscription
+2026-04-15,moss_float,out,1800.00,EUR,Moss top-up,transfer,,monthly card float
+2026-04-18,main,in,5500.00,EUR,Massive Dynamic,revenue,,monthly subscription
+2026-04-20,main,out,3500.00,EUR,LinkedIn Ads,marketing,marketing,paid acquisition
+2026-04-22,main,in,3800.00,EUR,Tyrell Corp,revenue,,monthly subscription
+2026-04-25,main,out,420.00,EUR,Datadog,saas,engineering,monitoring
+2026-04-28,main,out,650.00,EUR,Notion Labs,saas,operations,team subscription
+2026-04-30,main,out,2400.00,EUR,Marketing Agency,marketing,marketing,quarterly retainer
+2026-05-01,main,out,5800.00,EUR,Payroll Provider,payroll,operations,monthly payroll incl new hire
+2026-05-02,main,out,3850.00,EUR,Stripe Inc,saas,engineering,monthly subscription
+2026-05-03,main,in,2800.00,EUR,Beta Industries,revenue,,monthly subscription
+2026-05-05,main,out,1800.00,EUR,WeWork,rent,operations,office rent
+2026-05-08,main,in,1500.00,EUR,Cosmic Labs,revenue,,monthly subscription
+2026-05-09,main,out,950.00,EUR,Google Cloud,saas,engineering,GCP monthly

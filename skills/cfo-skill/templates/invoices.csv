@@ -1,0 +1,3 @@
+invoice_id,customer,issued_at,due_at,amount,currency,status
+INV-2026-001,Acme Corp,2026-04-01,2026-04-30,1500.00,EUR,paid
+INV-2026-002,Cosmic Labs,2026-04-15,2026-05-15,2400.00,EUR,unpaid

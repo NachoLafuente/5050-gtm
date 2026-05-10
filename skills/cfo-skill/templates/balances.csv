@@ -1,0 +1,4 @@
+account,currency,balance,as_of
+main,EUR,42300.00,2026-05-10
+operating,EUR,8500.00,2026-05-10
+moss_float,EUR,3200.00,2026-05-10

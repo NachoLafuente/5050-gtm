@@ -1,145 +1,145 @@
 ---
 name: cfo-skill
-description: Read-only financial data layer for bootstrapped startups. Pulls live numbers from Attio (revenue, customers, pipeline), Qonto (cash, AR, transactions), and Moss (spend, vendors, departments) to compute runway, burn rate, LTV:CAC, NRR, customer concentration, AR aging, and vendor spend. Use when the user asks "what's our runway?", "how much cash do we have?", "what's our burn?", "who are our biggest customers?", "where is spend going?", "what's our LTV:CAC?", or any question that boils down to surfacing finance numbers. NOT financial, legal, tax, or investment advice.
+description: Read-only CFO data dashboard for bootstrapped startups. Two modes — CSV templates (works with any stack: Attio/HubSpot/Salesforce + Qonto/Mercury/Brex + Stripe + Moss/Ramp/Pleo) or live API pull from Attio + Qonto + Stripe + Moss. Computes runway, burn rate, MRR/ARR, NRR, customer concentration, AR aging, DSO, vendor spend, departmental burn. Outputs an Excel workbook with 8 sheets. Use when the user asks "what's our runway?", "how much cash do we have?", "what's our burn?", "who are our biggest customers?", "where is spend going?", "what's our MRR?", "AR aging?". Read-only by design. NOT financial, legal, tax, or investment advice.
 ---
 
-# CFO Skill: Read-Only Financial Data Layer
+# CFO Skill
 
-> ## ⚠️ DISCLAIMER — READ BEFORE USING
+> ## ⚠️ DISCLAIMER
 >
-> **This skill fetches and displays data. It is NOT financial, legal, tax, accounting, or investment advice.**
+> **This skill displays data. It is NOT financial, legal, tax, accounting, or investment advice.**
 >
-> - Numbers may be stale, miscategorized, or reflect bugs in the upstream systems (Attio, Qonto, Moss).
-> - The frameworks below (LTV:CAC, runway, burn multiple, Rule of 40, etc.) are heuristics, not guarantees.
-> - Decisions about hiring, fundraising, distributions, taxes, dividends, solvency, or any matter with legal or financial consequences must be made by you in consultation with a qualified CFO, accountant, lawyer, or tax advisor.
-> - The author and contributors accept no liability for decisions made based on this skill's output.
-> - Always verify critical numbers directly in the source system before acting on them.
->
-> Use this skill to **see your numbers faster**, not to replace professional judgment.
+> Numbers may be stale, miscategorized, or reflect bugs in upstream systems. Frameworks below (LTV:CAC, runway, burn multiple, Rule of 40) are heuristics, not guarantees. Decisions about hiring, fundraising, distributions, taxes, or solvency must be made by you in consultation with a qualified CFO, accountant, lawyer, or tax advisor. The author and contributors accept no liability for decisions made based on this skill's output.
 
 ---
 
-## What This Skill Does
+## Two ways to use it
 
-1. **Pulls live data** from three connected systems via their public APIs:
-   - **Attio** — customer, revenue, pipeline data
-   - **Qonto** — bank balance, transactions, AR
-   - **Moss** — corporate spend, vendors, departments
-2. **Computes standard SaaS finance metrics** from that data (runway, burn, LTV:CAC, NRR, etc.).
-3. **Surfaces frameworks** the user can apply themselves.
+### Mode 1 — CSV templates (works with any stack)
 
-**It never gives a recommendation on a hire, raise, distribution, or any decision with legal/tax/financial consequences.** It shows the numbers and the framework. The human decides.
+Drop four CSVs into a folder, run one command, get an Excel workbook. Works with **any** CRM/bank/billing stack — Attio, HubSpot, Salesforce, Pipedrive, Mercury, Brex, Stripe, Chargebee, Ramp, Pleo, whatever.
 
----
+Templates live in [`templates/`](templates/). Realistic example data lives in [`examples/`](examples/) so you can try the pipeline before plugging in real data.
 
-## Data Sources
+```bash
+python skills/cfo-skill/run.py --source csv --csv-dir ./my-data --output cfo.xlsx
+```
 
-| Source | Answers | Reference |
-|--------|---------|-----------|
-| Attio | MRR/ARR, NRR, customer concentration, pipeline, churn signals | [references/attio.md](references/attio.md) |
-| Qonto | Cash balance, runway, burn rate, AR aging, transactions | [references/qonto.md](references/qonto.md) |
-| Moss | Spend by department/vendor/category, expense detail | [references/moss.md](references/moss.md) |
+CSV schemas (column headers in `templates/`):
 
-Each reference file maps **CFO question → exact API call(s)**.
+| File | Columns |
+|------|---------|
+| `customers.csv` | `customer_id, customer_name, status, signed_up_at, churned_at, mrr, plan` |
+| `cash_movements.csv` | `date, account, direction, amount, currency, counterparty, category, department, note` |
+| `invoices.csv` | `invoice_id, customer, issued_at, due_at, amount, currency, status` |
+| `balances.csv` | `account, currency, balance, as_of` |
 
----
+`status` values: `active`, `churned`, `lead` (only `active` counts toward MRR). `direction` values: `in`, `out`. Invoice `status` values: `paid`, `unpaid`, `draft`.
 
-## Question → Source Map
+### Mode 2 — Live API pull (Attio + Qonto + Stripe + Moss)
 
-| Question | Data needed | Sources |
-|----------|-------------|---------|
-| What's our cash balance? | Bank balances | Qonto + Moss bank-accounts |
-| What's our runway? | Cash ÷ trailing burn | Qonto transactions + Moss expenses |
-| What's our burn multiple? | Net burn ÷ net new ARR | Qonto + Moss + Attio |
-| What's our MRR / ARR? | Active subscriptions | Attio (custom MRR field) |
-| What's our NRR? | Cohort revenue retention | Attio + revenue source |
-| Customer concentration? | Top customers by revenue | Attio |
-| AR aging? | Unpaid invoices by age | Qonto invoices |
-| Where is spend going? | Expenses by category/vendor/dept | Moss |
-| Top vendors by spend? | Supplier-aggregated expenses | Moss |
-| Departmental burn? | Expenses grouped by team | Moss |
-| LTV:CAC? | Revenue + churn + S&M spend | Attio + Moss |
+Set credentials in your environment, run the puller, get the same Excel workbook from live data.
 
-If a question maps to data the connected systems can't answer, say so explicitly. Don't fabricate.
+```bash
+python skills/cfo-skill/run.py --source api --providers all --output cfo.xlsx
+```
 
----
+Or pick specific providers — they run in the order you list, and **later writers win** on `customers.csv` / `invoices.csv`:
 
-## Core Mental Models (Heuristics — Not Advice)
+```bash
+python skills/cfo-skill/run.py --source api --providers qonto,stripe,moss      # Stripe-billed SaaS
+python skills/cfo-skill/run.py --source api --providers qonto,attio,moss        # CRM-driven (no Stripe)
+python skills/cfo-skill/run.py --source api --providers qonto,attio,stripe,moss # both — Stripe wins on MRR
+```
 
-**Profit is a constraint, not a goal.** Capital discipline forces better decisions in bootstrapped companies.
+Provider-by-provider:
 
-**Unit economics targets** (industry heuristics):
-- LTV ≥ 3× CAC (best-in-class: 7-8×)
-- CAC payback < 12 months (high performers: 5-7 months)
+| Provider | Writes | Best at | Reference |
+|----------|--------|---------|-----------|
+| **Stripe** | `customers.csv` (with real MRR), `invoices.csv` | Authoritative SaaS revenue. **Use this if you bill via Stripe.** | [references/stripe.md](references/stripe.md) |
+| **Attio** | `customers.csv` | CRM-driven customer state, plan, lifecycle | [references/attio.md](references/attio.md) |
+| **Qonto** | `balances.csv`, `cash_movements.csv`, `invoices.csv` | Bank truth — cash position, transactions, AR | [references/qonto.md](references/qonto.md) |
+| **Moss** | appends to `cash_movements.csv` | Categorized card spend, vendors, departments | [references/moss.md](references/moss.md) |
 
-**Revenue per employee benchmarks**:
-- $110-150K at $1-5M ARR
-- $200-250K at $10-50M ARR
-- Bootstrapped companies typically run 40-70% higher than VC-backed peers.
-
-**Runway heuristics**:
-- Minimum: 24-36 months
-- Danger zone: <12 months
-
-**Burn multiple** = Net Burn ÷ Net New ARR
-- <1×: efficient · 1-1.5×: acceptable · >2×: concerning
-
-**Rule of 40**: Revenue Growth % + EBITDA Margin % ≥ 40%
-
-For full benchmarks see [references/metrics-benchmarks.md](references/metrics-benchmarks.md).
-For bootstrapped case studies see [references/case-studies.md](references/case-studies.md).
+Each puller writes its slice to a temp folder; the same compute layer then generates the Excel workbook. **You don't have to use all four.** A Stripe + Mercury founder can run `--providers stripe` and use CSV templates for the bank side. A HubSpot + Brex founder skips API mode entirely and uses CSV for everything.
 
 ---
 
-## How to Answer a CFO Question
+## Required environment variables
 
-1. **Restate the question in numerical terms.** ("What's our runway?" → "I need cash balance and trailing 3-month net burn.")
-2. **Identify the data source(s)** from the table above.
-3. **Open the relevant reference file** and use the documented API call(s).
-4. **Show the raw numbers first**, then the computed metric, then the framework.
-5. **Repeat the disclaimer** if the user is making a real decision.
-6. **Flag data quality issues** explicitly: stale data, missing fields, miscategorized expenses.
+Only set the ones for providers you actually use.
 
-Example response shape:
+| Provider | Variables |
+|----------|-----------|
+| Stripe | `STRIPE_SECRET_KEY` (use a restricted key with read on customers, subscriptions, invoices, payouts) |
+| Attio | `ATTIO_API_KEY`. Optional: `ATTIO_MRR_ATTR`, `ATTIO_STATUS_ATTR`, `ATTIO_ACTIVE_VAL`, `ATTIO_CHURNED_ATTR`, `ATTIO_PLAN_ATTR`, `ATTIO_NAME_ATTR` |
+| Qonto | `QONTO_API_KEY` + `QONTO_SECRET_KEY` (the "secret key" is your Qonto org slug) |
+| Moss | `MOSS_KEY_ID` + `MOSS_SECRET_KEY` (OAuth client credentials, scope `read`) |
 
-> Cash balance (Qonto, as of 2026-05-10): €42,300
-> Trailing 3-month net burn (Qonto outflows − inflows): €8,100/mo
-> **Runway: ~5.2 months**
->
-> Heuristic: <12 months runway is the danger zone.
->
-> ⚠️ This is data, not advice. Verify numbers in Qonto directly before acting. Consult a qualified advisor for decisions about fundraising, hiring freezes, or cuts.
+Skill is read-only — never request `write` scopes. Never log or echo a secret.
 
 ---
 
-## Auth & Setup
+## What the workbook contains
 
-The skill assumes the following environment variables are set:
+Eight sheets:
 
-| Variable | System | Where to get it |
-|----------|--------|-----------------|
-| `ATTIO_API_KEY` | Attio | Attio workspace settings → API |
-| `QONTO_API_KEY` + `QONTO_SECRET_KEY` | Qonto | Qonto settings → Integrations → API |
-| `MOSS_KEY_ID` + `MOSS_SECRET_KEY` | Moss | Moss settings → Developers → OAuth client |
-
-Missing credentials → say so, don't guess. Never log or echo a secret.
+1. **Summary** — headline metrics with heuristic flags (runway, concentration, DSO, burn multiple)
+2. **Cash Flow** — monthly inflows / outflows / net for the trailing 3 months
+3. **Customers** — full customer table from your input data
+4. **Concentration** — top 1 / 5 / 10% of MRR + top-10 customer table
+5. **AR Aging** — unpaid invoices bucketed (current, 1-30, 31-60, 61-90, 90+) + per-invoice detail
+6. **Spend** — by category, by vendor, by department
+7. **Recurring Vendors** — heuristic detection (3+ similar transactions)
+8. **Disclaimer** — full disclaimer in-workbook
 
 ---
 
-## What This Skill Does NOT Do
+## Computed metrics
+
+| Metric | Formula | Heuristic flags |
+|--------|---------|-----------------|
+| Cash balance | sum of bank account balances | — |
+| Runway | cash ÷ trailing 3-month avg net burn | <12 mo red, 12-24 mo yellow |
+| Burn multiple | net burn ÷ MRR | >2× red |
+| MRR / ARR | sum of active customer MRR × 12 | — |
+| Customer concentration | top-N MRR ÷ total MRR | >25% top-1 red |
+| AR aging | unpaid invoices bucketed by days past due | 60+ days red |
+| DSO | (AR ÷ 90d issued sales) × 90 days | <30 green, >60 red |
+| Spend by category | sum of outflows grouped by `category` | — |
+| Top vendors | sum of outflows grouped by `counterparty` | — |
+| Recurring vendors | counterparty appearing 3+ times in trailing window | — |
+| Departmental burn | sum of outflows grouped by `department` | — |
+
+Frameworks used (LTV:CAC, Rule of 40, Magic Number, etc.) live in [references/metrics-benchmarks.md](references/metrics-benchmarks.md). Bootstrapped case studies in [references/case-studies.md](references/case-studies.md).
+
+---
+
+## What this skill does NOT do
 
 - ❌ Make recommendations on hiring, raises, distributions, or fundraising
 - ❌ Give tax, legal, or accounting advice
-- ❌ Project cash flow into the future as a "forecast" the user can rely on
-- ❌ Determine whether the company is solvent
-- ❌ Write to any of the three systems (read-only by design)
+- ❌ Project cash flow into the future as a "forecast" you can rely on
+- ❌ Determine whether your company is solvent
+- ❌ Write to any of the connected systems (read-only by design)
 
-For any of these, the answer is: "I can show you the numbers. The decision and any forward-looking interpretation is for you and a qualified advisor."
+For any of these: "I can show you the numbers. The decision is for you and a qualified advisor."
+
+---
+
+## How Claude should answer a CFO question
+
+1. **Restate the question in numerical terms.** ("What's our runway?" → "I need cash balance and trailing 3-month net burn.")
+2. **Identify which provider(s) to query** from the table above, or which CSV(s) to read.
+3. **Run** `run.py` with appropriate flags, or read the CSVs directly via `cfo.load_all()` + `cfo.summarize()`.
+4. **Show raw numbers first, then computed metric, then framework.**
+5. **Repeat the disclaimer** when the user is making a real decision.
+6. **Flag data quality issues** explicitly (stale data, missing fields, miscategorized expenses).
 
 ---
 
 ## Attribution
 
-Frameworks, benchmarks, and case studies adapted from [EveryInc/charlie-cfo-skill](https://github.com/EveryInc/charlie-cfo-skill) (MIT licensed, © 2026 Every).
+Frameworks, benchmarks, and case studies adapted from [EveryInc/charlie-cfo-skill](https://github.com/EveryInc/charlie-cfo-skill) (MIT, © 2026 Every).
 
-Data layer (Attio + Qonto + Moss integrations) added by 5050Growth.
+Data layer (Stripe + Attio + Qonto + Moss pullers + CSV templates + Excel writer) by 5050Growth.

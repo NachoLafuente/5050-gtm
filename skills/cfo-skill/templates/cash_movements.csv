@@ -1,0 +1,3 @@
+date,account,direction,amount,currency,counterparty,category,department,note
+2026-04-30,main,out,3850.00,EUR,Stripe Inc,saas,engineering,monthly subscription
+2026-05-01,main,in,12000.00,EUR,Acme Corp,revenue,,annual prepay

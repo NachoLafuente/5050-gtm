@@ -1,0 +1,3 @@
+customer_id,customer_name,status,signed_up_at,churned_at,mrr,plan
+cus_001,Acme Corp,active,2024-03-15,,1500,enterprise
+cus_002,Beta Industries,churned,2023-11-02,2025-04-10,0,growth
