@@ -64,6 +64,24 @@ Sources cited inline: Skok (Matrix), a16z, Sequoia, Tunguz.
 |---|---|
 | [`/gsc-lighthouse`](skills/gsc-lighthouse/) | One-shot Google Search Console + Lighthouse health check for a verified GSC property. Sitemap status, per-URL index coverage, 28-day search analytics, and PageSpeed Insights on the top 10 pages, all in one report grouped by theme. |
 
+### Finance / CFO
+
+| Skill | What it does |
+|---|---|
+| [`/cfo-skill`](skills/cfo-skill/) | Read-only financial data layer for bootstrapped startups. Wires Claude into Attio (revenue / customers / pipeline) + Qonto (cash / AR / transactions) + Moss (spend / vendors / departments) so you can ask "what's our runway?", "where is spend going?", "customer concentration?" and get the numbers fast. Documentation-only skill — Claude reads the API references and pulls live numbers. **Not financial, legal, tax, or investment advice.** |
+
+**What you get from `/cfo-skill`** — a question-to-API map across your finance stack:
+
+| Question | Pulled from |
+|---|---|
+| Cash balance, runway, burn rate | Qonto `/v2/organization` + `/v2/transactions` |
+| MRR / ARR / customer concentration / pipeline | Attio `/v2/objects/{companies,deals}/records/query` |
+| Spend by category / vendor / department | Moss `/v1/expenses` + `/v1/suppliers` + `/v1/departments` |
+| AR aging, DSO | Qonto `/v2/client_invoices` |
+| Top vendors, recurring SaaS spend, headcount by team | Moss `/v1/expenses` + `/v1/users` + `/v1/teams` |
+
+Frameworks (LTV:CAC, runway, burn multiple, Rule of 40) and bootstrapped case studies (Mailchimp, Zapier, Basecamp, ConvertKit, Zoho) are bundled as references — adapted from [EveryInc/charlie-cfo-skill](https://github.com/EveryInc/charlie-cfo-skill) (MIT). Read-only by design — never requests write scopes.
+
 ### Coming soon
 
 We're adding skills as we productize internal work. Star the repo to follow along:
