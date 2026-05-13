@@ -58,6 +58,12 @@ CAC payback is opt-in (provide a `cohort,cac_amount` CSV). Gross margin defaults
 
 Sources cited inline: Skok (Matrix), a16z, Sequoia, Tunguz.
 
+### Sales Ops
+
+| Skill | What it does |
+|---|---|
+| [`/proposal`](skills/proposal/) | Generate a full client implementation/consulting proposal from a sales call transcript. Asks pre-flight questions (currency, pricing, timeline, signer), researches the client's domain, then outputs 12 ready-to-copy markdown sections with project snapshot callouts, scope phases, named deliverables, assumptions, open items, and a pricing/contract scaffold you wire to your own logic. Output goes to chat for paste-into-Notion/Docs/Typst, never to a file. |
+
 ### SEO / Demand
 
 | Skill | What it does |
@@ -99,7 +105,7 @@ Frameworks (LTV:CAC, runway, burn multiple, Rule of 40) and bootstrapped case st
 
 We're adding skills as we productize internal work. Star the repo to follow along:
 
-- **Sales Ops** — proposal generation from call transcripts, pre-discovery briefs, lead scoring rules
+- **Sales Ops** — pre-discovery briefs, lead scoring rules
 - **Lifecycle / RevOps** — Attio lifecycle audit, ownership rules, list hygiene
 - **SEO / Demand** — programmatic page generators, schema markup audits
 - **Reporting** — Evidence/DuckDB scaffolds for any CRM source
