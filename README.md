@@ -62,7 +62,8 @@ Sources cited inline: Skok (Matrix), a16z, Sequoia, Tunguz.
 
 | Skill | What it does |
 |---|---|
-| [`/proposal`](skills/proposal/) | Generate a full client implementation/consulting proposal from a sales call transcript. Asks pre-flight questions (currency, pricing, timeline, signer), researches the client's domain, then outputs 12 ready-to-copy markdown sections with project snapshot callouts, scope phases, named deliverables, assumptions, open items, and a pricing/contract scaffold you wire to your own logic. Output goes to chat for paste-into-Notion/Docs/Typst, never to a file. |
+| [`/disco-prep`](skills/disco-prep/) | Pre-discovery-call prep brief from an intro email, referral, or company name. A 3-section scan doc you read in the two minutes before the call: who they are, 8 ranked scope-defining questions, and the one past win to drop as proof. Output to chat, under 350 words. |
+| [`/proposal`](skills/proposal/) | Turn a sales/discovery call transcript into a complete, ready-to-send implementation proposal: snapshot, executive summary, outcomes, scope, out-of-scope, deliverables, timeline, and investment. Copy-ready markdown, specific to what was actually discussed on the call. |
 
 ### SEO / Demand
 
@@ -105,7 +106,7 @@ Frameworks (LTV:CAC, runway, burn multiple, Rule of 40) and bootstrapped case st
 
 We're adding skills as we productize internal work. Star the repo to follow along:
 
-- **Sales Ops** — pre-discovery briefs, lead scoring rules
+- **Sales Ops**: lead scoring rules and follow-up sequencing (proposal generation + pre-discovery briefs now shipped above)
 - **Lifecycle / RevOps** — Attio lifecycle audit, ownership rules, list hygiene
 - **SEO / Demand** — programmatic page generators, schema markup audits
 - **Reporting** — Evidence/DuckDB scaffolds for any CRM source

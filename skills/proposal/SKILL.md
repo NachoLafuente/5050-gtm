@@ -1,348 +1,135 @@
 ---
 name: proposal
-description: Generate a full client implementation/consulting proposal from a sales call transcript or summary. Use when the user says "/proposal", pastes a transcript after a sales call, or asks to "draft a proposal", "write the SOW", or "turn this transcript into a proposal". Output is delivered directly in the chat as 12 markdown sections the user can copy. DO NOT write it to a file.
+description: Turn a sales or discovery call transcript into a complete, ready-to-send implementation proposal: snapshot, executive summary, outcomes, scope, out-of-scope, deliverables, timeline, and investment. Use when the user says "/proposal", pastes a call transcript, or asks to "draft a proposal", "write the SOW", or "turn this transcript into a proposal". Output goes to the chat as copy-ready markdown. One-shot, no warehouse.
 ---
 
 # Proposal Generator
 
-You generate client implementation / consulting proposals from sales call transcripts. The deliverable is **markdown text in the chat**, not a file. The user will copy it and paste it into their template of choice (Notion, Google Docs, Typst, PDF, etc.).
+Turn a sales or discovery call transcript into a complete implementation proposal. The deliverable is **copy-ready markdown in the chat**, not a file.
 
 ## Input
 
-Paste the call transcript or summary inline. Extract:
+Paste the call transcript, or give a file path to it. Extract the client name, company, attendees, scope discussed, pain points, and any numbers mentioned (budget, deadline, user count).
 
-- Client name, company, attendees
-- Scope discussed
-- Pain points (specific, in their words)
-- Numbers mentioned (budget, deadline, team size, deal volume, hours wasted, fundraise targets, etc.)
-- Signer + decision flow
-- Tools they currently use
-- Domain / website (you'll need this for Section 2 research)
+If critical facts are missing (client legal name, company, signer name, timeline), ask ONE consolidated question before writing. Do not invent commercials.
 
-If critical facts are missing (legal name, company, signer, timeline, **company domain**), ask ONE consolidated question before writing. Do not invent commercials.
+> If your notes tool has an API, you can pull the transcript programmatically. Keep any keys in your own `.env` and read them at runtime, never hard-code credentials into the skill.
 
-**Always ask for the domain** if the transcript doesn't clearly give you one. You need it for the Section 2 web research step.
+## Pre-Flight (before generating anything)
 
-## Pre-Flight Questions (BEFORE generating anything)
-
-After ingesting the transcript and doing initial research, you MUST ask the user a single consolidated question block before generating the proposal. Never assume pricing, timeline, or phasing from the transcript alone. The transcript captures what the client said; the user decides what to actually quote.
-
-Read the transcript and form your own draft answers, then ask the user to confirm or override. Format the question block exactly like this:
+After reading the transcript, ask a single consolidated question block. Never assume pricing, timeline, or phasing from the transcript alone: the transcript captures what the client *said*, you decide what to *quote*. Draft your own answers first, then ask to confirm or override:
 
 ```
 Before I draft, confirm these so I don't have to redo it:
 
-1. **Currency** (set by client geography)
+1. Currency (set by client geography)
    Client HQ: {country/city from transcript}
-   Currency: {USD / GBP / EUR / other based on geography}
-   Confirm or override?
+   Currency:  {detected}, confirm or override?
 
-2. **Pricing**
-   <!-- ADD YOUR PRICING LOGIC HERE.
-        Examples of what to ask:
-        - Modular options (Phase 1 / Phase 2 / Phase 3) each independently priced?
-        - Or Sprint vs Impact (2 options)?
-        - Or single quote?
-        - What floors/ceilings apply?
-        - Output-based, value-based, or fixed?
-        Show the structure you'd propose, then ask the user to confirm or override. -->
+2. Bundle structure (default: 1 to 2 bundles)
+   - Bundle 1, {scope summary}: {price you'll set}
+   - Bundle 2, {scope summary}: {price you'll set}
+   Override anything? Different structure (single bundle, 3+ bundles)?
 
-3. **Timeline**
-   Reading the transcript, I'd propose:
-   - Phase 1: {N} weeks
-   - Phase 2: {N} weeks (if applicable)
-   - Phase 3: {N} weeks (if applicable)
-   - Total: {N} weeks
-   - Kickoff: {vague month, e.g. "mid-{month}"}
-   - Go-live: {vague month}
-   Sound right or compress/extend?
+3. Timeline
+   - Bundle 1: {N} weeks
+   - Bundle 2: {N} weeks (if relevant)
+   - Kickoff: mid-{month} (use vague months, NEVER fixed calendar dates)
+   - Go-live: late {month}
+   Sound right, or compress/extend?
 
-4. **Signer + decision flow**
-   - Signer: {Name from transcript or "TBC"}
-   - Anyone else needs to approve? (partners, founders, CFO)
+4. Signer + decision flow
+   - Signer: {name or "TBC"}
+   - Anyone else needs to approve?
 
-5. **Anything to adjust from the transcript**
-   - Scope items to trim or add?
-   - Pain points to lean harder into?
-   - Past clients to reference by name?
+5. Anything to adjust from the transcript
+   - Scope to trim or add? Pain to lean harder into? Past clients to name?
 ```
 
-Wait for the user's response. Then draft.
+Wait for the response, then draft.
 
-**Defaults if the user doesn't override:**
-
-- **Dates**: Use vague month language ("mid-May", "late June") rather than specific calendar dates. Specific dates lock you in if anything slips.
-- **Timeline floor**: At least 3 months total for a full multi-phase engagement. Single-phase work can be 4–6 weeks. Default long, let the user compress.
-- **Currency**: Set by client geography. Don't default silently.
+**Defaults if not overridden:** detect currency from geography; 1 to 2 bundles; payment terms per your standard; support / training / docs NOT included unless asked; vague month language for dates.
 
 ## Voice & Quality Bar
 
-What separates a winning proposal from a generic one:
-
-- **Specific, not generic.** Name the exact attributes, objects, lists, pipelines, integrations, and numbers the client mentioned. Not "restructure the CRM" but "Archive the 80+ custom attributes on the Company object, rebuild as list-level attributes on the {specific list name}."
-- **Diagnose, don't describe.** Identify issues that exist in their current setup ("Strategy field exists as both Text and Multi-select, must resolve"). This is what makes the client trust you understood the call.
-- **Hands-on, not advisory.** Deliverables are *built, migrated, deployed*, never "recommended" or "facilitated."
+- **Never use em dashes.** Use commas, periods, colons, parentheses, or line breaks. (En dashes for ranges like "Weeks 1 to 3" or numeric ranges are fine.)
+- **Specific, not generic.** Name the exact attributes, objects, lists, integrations, and figures the client mentioned. Not "restructure the data model" but "Archive the 80+ custom attributes on the Company object, rebuild as list-level attributes."
+- **Diagnose, don't describe.** Call out concrete issues in their current setup. This is what makes the client trust you understood.
+- **Hands-on, not advisory.** Deliverables are built, migrated, deployed, never "recommended" or "facilitated."
 - **Phased with week ranges.** Every scope item gets a phase and a week number.
-- **Short sentences. No fluff.** No "we are excited to partner" language. No empty adjectives ("robust," "comprehensive," "best-in-class," "seamless").
-- **Visual cohesion.** Every section must have AT LEAST ONE of: a snapshot/opener callout (code block with `> key: value` lines), a table, or 5+ named bullets. Bare paragraphs alone are not allowed.
-- **Density floors.** A section that fits in 3 lines makes the document look thin and the price look high. Hit the per-section minimums below. If you can't, expand with concrete artifacts from the transcript. Don't pad with adjectives.
-- **<!-- ADD YOUR VOICE RULES HERE -->** Examples of things to specify: punctuation preferences (em dashes, italics in headings), banned words, tone (formal vs casual), forbidden phrases, sign-off style.
+- **Short sentences. No fluff.** No "excited to partner" language. No "robust," "comprehensive," "best-in-class."
+- **Visual cohesion.** Every section has AT LEAST ONE of: a `> key: value` snapshot callout, a table, or 5+ named bullets. Bare-paragraph sections fail the bar.
 
-## Output Format
+## Output
 
-The skill outputs **two blocks in this order**:
+Output the proposal as markdown in the chat, copy-ready for the client. Use `## N. Section Name` headers. Fill every placeholder with transcript-derived content.
 
-1. **Pricing Preview** (internal, shown FIRST so the user can sanity-check pricing before sending anything to the client)
-2. **The 12-section proposal** (ready-to-copy for the client)
-
----
-
-## Block 1 — Pricing Preview (internal, shown to the user before the proposal)
-
-This block is the reasoning the user sees to sanity-check pricing before sending anything to the client. Do NOT include it in the copyable proposal.
-
-Format the preview like this:
-
-```
-## Pricing Preview — {Client name}
-
-<!-- ADD YOUR PRICING LOGIC HERE.
-
-     The preview should show your reasoning so the user can challenge it.
-     Typical things to include:
-
-     - Deliverable breakdown (line items, each with a price floor)
-     - Value frame (where measurable: hours saved, revenue captured, cost avoided)
-     - Multipliers (pain / value / scope risk, with one-line evidence each)
-     - Market benchmark (what comparable firms likely charge)
-     - The final quote (1, 2, or 3 options)
-     - TL;DR (one sentence justifying the floor and ceiling) -->
-```
-
-Then a divider, then Block 2.
-
----
-
-## Block 2 — The 12-Section Proposal
-
-Output exactly these 12 numbered blocks as markdown in the chat. Use the header format `## N. Section Name`. Fill every `{placeholder}` with transcript-derived content. The prices in Section 11 must match the prices you showed in the Pricing Preview.
-
-### Header block (above Section 1)
+### Header block (above section 1)
 
 ```
 > Prepared for: {Client Company}
-> Prepared by: {Your name} at {Your company}
-> Date: {today, formatted Month DD, YYYY}
+> Prepared by:  {Your name}, {Your company}
+> Date:         {today}
 ```
 
-### Project Snapshot (immediately below the header, before Section 1)
-
-A monospace `> key: value` block that gives the reader the answer in 5 seconds. Format exactly:
+### Project Snapshot (below the header, before Section 1)
 
 ```
-> project:      {3–6 word project name, e.g. "CRM rollout — Sales + IR"}
-> investment:   {currency}{Option 1 price} or {currency}{Option 2 price}
+> project:      {3-6 word project name}
+> investment:   {Bundle 1 price} and/or {Bundle 2 price}
 > timeline:     {N} weeks ({phase count} phases)
 > integrations: {comma-separated tool names, or "None"}
 > teams:        {comma-separated teams in scope}
 > signer:       {Name}, {Role}
-> valid_until:  {today + N days, DD.MM.YYYY}
+> valid_until:  {today + 10 days, DD.MM.YYYY}
 ```
-
-All fields must be filled in. If you can't derive one, ask before writing.
 
 ### 1. Executive Summary
 
-```
-> in_scope:   {comma-separated business units / teams}
-> outcome:    {one-line outcome}
-> phases:     {N}
-```
+Open with a `> key: value` callout (in_scope, outcome, phases), then 2 to 4 sentences: what you're building, for whom, why it matters.
 
-2–4 sentences. What you're building, for whom, why it matters. Name the business units or teams in scope. Open with the section callout above as a code block; it doubles as the visual anchor for the page.
+### 2. Outcomes & Objectives
 
-### 2. Client Background
+**Lead with value, not tasks.** Two halves:
 
-1 paragraph (4–6 sentences). Company type, industry, size, geography, what tools they currently use, recent business signals (funding, expansion, new market, hires). Then a Stakeholders mini-table:
+**2a. Business Outcomes.** A short paragraph in the client's own language describing what changes for their business once this is live, then 3 to 5 bullets phrased as the buyer's wins. Format each: **{outcome in client language}** -> {what enables it} -> {quantified impact where possible}. The litmus test: the client should recognize their own words.
 
-| Name | Role | On the call? |
-|---|---|---|
-| {name} | {role} | ✓ / — |
+**2b. Project Objectives.** Numbered list, 5 to 7 items minimum. Concrete operational objectives that produce the outcomes above.
 
-**Research step:** Run a WebSearch / WebFetch on the client's domain (and optionally their LinkedIn) **before writing this section**. Combine what you find with what the transcript said. If you have no domain, stop and ask for it. Don't hallucinate the company description.
+### 3. Scope of Work
 
-The goal: the client reads Section 2 and thinks "they actually know who we are."
+Organized into **Phases** (0 to 4) with week ranges. Under each phase, use bolded sub-sections and bullet lists. Name concrete artifacts: lists, pipelines, objects, attributes, workflows. **Minimum 15 named artifacts** across all phases. If you can't hit that, push back on the user about what's actually in scope before drafting. **This section is the heart**: if it's vague, the proposal is weak.
 
-### 3. Outcomes & Objectives
+### 4. Out of Scope
 
-```
-> business_outcome: {one-line plain-language outcome in CLIENT's words}
-> success_metric:   {one quantifiable signal, e.g. hours saved, deals tracked, time-to-fundraise}
-> objectives:       {N below}
-```
+Bulleted exclusions. By default exclude (unless explicitly opted in):
 
-**Lead with value, not tasks.** This section has two halves:
+- **Post-launch support, training, and documentation.** Any post-handover work is billed as a new engagement.
+- **Historical backfills for integrations.** Integrations sync from go-live forward; backfilling historical data is an optional add-on, priced separately.
 
-**3a. Business Outcomes** (2–4 sentences, then 3–5 bullets)
+### 5. Deliverables
 
-A short paragraph in the client's own language describing what changes for their business after this is live. Then a bulleted list of outcomes phrased as the buyer's wins, not your deliverables. Reach for monetization or quantification wherever the transcript gives you numbers (deal sizes, headcount, hours, fundraise targets, churn rates, missed leads). Where the transcript gives no number, name the operational pain in plain language and quantify what you can.
+Markdown table: `#`, `Deliverable`, `Team/Area`. **Minimum 8 rows.** Each deliverable phrased as a noun the client can point at after go-live ("Investor Relations list with 12 attributes," not "list configuration work").
 
-Format each outcome bullet as: **{Outcome in client language}** → {what enables it} → {quantified impact where possible}.
+### 6. Indicative Timeline
 
-Example outcomes (do NOT copy verbatim, derive from the transcript):
+Markdown table: `Phase`, `Activity`, `Timing`. Mirror the phase breakdown from Section 3.
 
-- **Stop losing live deals to follow-up gaps.** A unified pipeline replaces the spreadsheet the team rebuilds every Monday → recovers ~6 hrs/week across 4 partners.
-- **One source of truth for the team.** Every team member sees the same status, same next-step → end of "what's the latest on X" Slack threads.
+### 7. Investment
 
-The litmus test: a client should read this section and recognize their own words. If it sounds like your deliverables list, rewrite it.
+This is the price the client pays. Open with a `> key: value` callout (bundles, currency, payment, validity). Then:
 
-**3b. Project Objectives**
+1. Present 1 to 2 bundles, each with a one-line scope summary and a price.
+2. State validity (e.g. 10 days), currency, and your payment terms.
 
-Numbered list, **5–7 items minimum**. Concrete operational objectives that will produce the outcomes above: "Resolve X," "Build Y," "Migrate Z from [source tool]." No vague goals. This is where deliverable language lives, after the value language has done its job.
-
-### 4. Scope of Work
-
-```
-> phases:    {N}
-> weeks:     {total weeks}
-> artifacts: {count of named lists / pipelines / objects / workflows below}
-```
-
-Organized into **Phases** (Phase 0, 1, 2, 3, 4) with week ranges. Under each phase, use bolded sub-sections and bullet lists. Name concrete artifacts: lists, pipelines, objects, attributes, workflows, integrations. **Minimum 15 named artifacts across all phases.** If you can't hit that, push back on the user about what's actually in scope before drafting.
-
-Example structure:
-
-- **Phase 0 — Discovery & Architecture (Week 1)**
-  - Data model audit
-  - Specific decisions to make
-- **Phase 1 — {Build area} (Weeks 1–3)**
-  - 1.1 Object cleanup
-  - 1.2 {First list built}
-  - 1.3 {Second list}
-- **Phase 2 — ...**
-- **Phase 3 — Reporting & Integrations (Week X)**
-- **Phase 4 — Training & Rollout (Weeks X–Y)**
-
-### 5. Out of Scope
-
-Bulleted. Explicitly list what's excluded: integrations beyond stated ones, automations if not included, other business units, ongoing admin, scope changes after sign-off.
-
-<!-- ADD YOUR STANDARD EXCLUSIONS HERE.
-     Typical exclusions worth always listing:
-     - Historical data backfills (if integrations only sync forward)
-     - Third-party tool subscriptions
-     - Post-launch maintenance beyond the included window
-     - Custom development outside the named workflows -->
-
-### 6. Deliverables
-
-```
-> count:    {N rows below}
-> built_by: {You}
-> owned_by: Client
-```
-
-Markdown table with columns: `#`, `Deliverable`, `Team / Area`. One row per concrete artifact (list, pipeline, migration, training session, doc). **Minimum 8 rows.** Each deliverable phrased as a noun the client can point at after go-live ("Investor Relations list with 12 attributes," not "list configuration work").
-
-### 7. Indicative Timeline
-
-```
-> total:     {N weeks}
-> kickoff:   {Week of {date} or vague month}
-> golive:    {Week {N} or vague month}
-```
-
-Markdown table: `Phase`, `Activity`, `Timing`. Mirror the Phase breakdown from Section 4.
-
-### 8. Roles & Responsibilities
-
-Markdown table: `Responsibility`, `Client`, `{You}`. Use ✓ marks. Cover: sign-offs, data exports, credential provisioning, attendance at sessions, all build / config, training, post-launch support.
-
-### 9. Assumptions
-
-Markdown table: `Assumption`, `Implication if untrue`. **Minimum 6 rows.** Cover: decisions made on time, data provided in usable format, seats provisioned, tool credentials handed over, scope changes may shift timeline, stakeholder availability for sessions.
-
-| # | Assumption | Implication if untrue |
-|---|---|---|
-| 1 | {assumption} | {what happens / how timeline shifts} |
-
-### 10. Open Items
-
-Markdown table: `Item`, `Decision needed by`, `Owner`. **Minimum 4 rows.** Things that must be resolved before kickoff: exact pipeline stages, workspace architecture decisions, list of contact types, reporting metrics, support window duration. Pull directly from what was unresolved in the transcript.
-
-| # | Item | Decision needed by | Owner |
-|---|---|---|---|
-| 1 | {open item} | {Kickoff / Week N / Date} | {Client name or You} |
-
-### 11. Investment
-
-```
-> options:   {N}
-> currency:  {currency} (excl. {VAT / sales tax})
-> pricing:   <!-- ADD YOUR PRICING MODEL one-liner here -->
-> payment:   <!-- ADD YOUR PAYMENT TERMS one-liner here -->
-> add_ons:   <!-- ADD YOUR OPTIONAL ADD-ONS one-liner here, or "None" -->
-> valid:     {N} days
-```
-
-<!-- ADD YOUR PRICING LOGIC HERE.
-
-     This section is where the model decides the actual numbers shown to the client.
-     Typical things to define:
-
-     1. How you price (per-deliverable / per-phase / fixed sprint / value-based / hourly).
-     2. Floors and ceilings for each category of work.
-     3. How to present options (Sprint vs Impact, modular phases 1/2/3, single quote).
-     4. Payment terms (100% upfront / Day 1 + Day 30 split / milestone-based).
-     5. Discount and add-on rules (if any).
-     6. The exact comparison table format you want the model to output.
-
-     Example structure to fill in:
-
-     | Feature | Option 1 | Option 2 |
-     |---|---|---|
-     | {Core deliverable 1} | Included | Included |
-     | {Core deliverable 2} | Included | Included |
-     | Workflows / Automations | None | {N} included |
-     | Sessions | Kick-off + walkthrough | + mid-project check-in |
-     | Post-launch support | 1 week | 2 weeks |
-     | **Investment** | **{currency}{price}** | **{currency}{price}** | -->
-
-Then a one-line offer validity statement:
-
-> This offer is valid for {N} days. All prices in {currency} and exclude {VAT / sales tax}.
-
-Then a brief one-line justification of the pricing in the client's language (value or output framing, not "hours of work").
-
-### 12. Contractual Terms
-
-<!-- ADD YOUR CONTRACT TERMS HERE.
-
-     Typical sections to include (substitute as appropriate):
-
-     - Project Scope reference (point at Section 4)
-     - Client Responsibilities (admin access, credentials, sign-offs)
-     - Investment & Payment terms (point at Section 11)
-     - Timeline reference (point at Section 7)
-     - Data Ownership (who owns the configurations + data)
-     - Marketing rights (logo + case study usage, if any)
-     - Liability cap
-     - Change Order process (rate for scope changes)
-     - Post-launch support definition (hours + response time + channel)
-     - Termination clause
-     - Acceptance mechanism (signature vs. invoice payment)
-
-     Keep this consistent with your standard MSA / service agreement template. -->
-
----
+Describe the value, not the hours. Price each bundle as a whole, never as a time estimate.
 
 ## Rules
 
-1. **Output to chat only.** Never write the proposal to a file. The user copies it from the chat.
-2. **No placeholders left.** If you can't derive a value, ask before writing. Don't leave `[TBD]` scattered through the draft.
-3. **Pricing is reasoned, not invented.** Follow the pricing logic the user defined in Section 11. If unsure, show the breakdown in the Pricing Preview block so the user can sanity-check before the proposal is generated.
-4. **Today's date** for the Date fields. Format as `Month DD, YYYY` at the top, `DD.MM.YYYY` in the Service Agreement.
-5. **Always research the client** for Section 2 via WebSearch / WebFetch. Ask for the domain if you don't have one.
-6. **Section 4 is the heart.** If it's vague, the proposal is weak. Name the objects, attributes, lists, integrations, and workflows explicitly. That's what justifies the price.
-7. **Visual cohesion is mandatory.** The Project Snapshot block (after the header) and the per-section `> key: value` callouts on Sections 1, 3, 4, 6, 7, 11 are not optional. They render as monospace code blocks in PDF and give the body visual rhythm. Sections 2, 9, and 10 must include their tables. Bare-paragraph sections fail the bar.
-8. **Lead with value, not deliverables.** Section 3 has a Business Outcomes block before the Objectives list. Outcomes are written in the client's language (their pain, their numbers, their fundraise / deal / team metrics). The objectives list still names concrete tasks; it just comes after the value frame, not in place of it.
+1. **Output to chat, copy-ready.**
+2. **No placeholders left.** If you can't derive a value, ask before writing. Don't scatter `[TBD]` through the draft.
+3. **No support, training, or docs by default.** Only include if explicitly asked.
+4. **Today's date** in the Date fields: `Month DD, YYYY` at the top.
+5. **Section 3 is the heart.** Name the objects, attributes, lists, integrations, and workflows explicitly.
+6. **Visual cohesion is mandatory.** The Project Snapshot block and per-section `> key: value` callouts are not optional. Bare-paragraph sections fail the bar.
+7. **Lead with value, not deliverables** (Section 2a before 2b), in the client's language.
