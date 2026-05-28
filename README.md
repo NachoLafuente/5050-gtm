@@ -63,7 +63,6 @@ Sources cited inline: Skok (Matrix), a16z, Sequoia, Tunguz.
 | Skill | What it does |
 |---|---|
 | [`/disco-prep`](skills/disco-prep/) | Pre-discovery-call prep brief from an intro email, referral, or company name. A 3-section scan doc you read in the two minutes before the call: who they are, 8 ranked scope-defining questions, and the one past win to drop as proof. Output to chat, under 350 words. |
-| [`/proposal`](skills/proposal/) | Turn a sales/discovery call transcript into a complete, ready-to-send implementation proposal: snapshot, executive summary, outcomes, scope, out-of-scope, deliverables, timeline, and investment. Copy-ready markdown, specific to what was actually discussed on the call. |
 
 ### SEO / Demand
 
@@ -106,7 +105,7 @@ Frameworks (LTV:CAC, runway, burn multiple, Rule of 40) and bootstrapped case st
 
 We're adding skills as we productize internal work. Star the repo to follow along:
 
-- **Sales Ops**: lead scoring rules and follow-up sequencing (proposal generation + pre-discovery briefs now shipped above)
+- **Sales Ops**: proposal generation from call transcripts, lead scoring rules, follow-up sequencing (pre-discovery briefs now shipped above)
 - **Lifecycle / RevOps** — Attio lifecycle audit, ownership rules, list hygiene
 - **SEO / Demand** — programmatic page generators, schema markup audits
 - **Reporting** — Evidence/DuckDB scaffolds for any CRM source
