@@ -1,4 +1,4 @@
-# Attio — Customer & Revenue Data
+# Attio: Customer & Revenue Data
 
 Attio holds the **customer and revenue side** of the CFO picture. This file maps CFO questions to the exact API calls that answer them.
 
@@ -10,7 +10,7 @@ Attio holds the **customer and revenue side** of the CFO picture. This file maps
 
 ## Workspace assumptions
 
-Attio is schema-flexible — every workspace has different attributes. The skill must:
+Attio is schema-flexible, every workspace has different attributes. The skill must:
 
 1. **First call** `GET /v2/objects/{object}/attributes` to discover the actual attribute slugs.
 2. **Never assume** `mrr`, `arr`, `contract_value` exist. Look them up.
@@ -50,9 +50,9 @@ Then: `sum(record.values.<mrr_attr>[0].currency_value for record in results)`.
 
 ⚠️ If the workspace doesn't have an MRR attribute, say so. Don't compute MRR from deal stages without the user confirming the model.
 
-### "Customer concentration — top 10 by revenue"
+### "Customer concentration: top 10 by revenue"
 
-Same query as MRR, but sort by the revenue attribute descending. Attio doesn't support server-side sort on all attribute types reliably — fetch all active customers and sort client-side.
+Same query as MRR, but sort by the revenue attribute descending. Attio doesn't support server-side sort on all attribute types reliably, fetch all active customers and sort client-side.
 
 Then compute:
 - Top 1 customer % of total
@@ -71,7 +71,7 @@ POST /v2/objects/deals/records/query
 }
 ```
 
-Sum the deal value attribute (typically `value` or `amount` — verify with `GET /v2/objects/deals/attributes`).
+Sum the deal value attribute (typically `value` or `amount`, verify with `GET /v2/objects/deals/attributes`).
 
 ### "Churned customers in last N months"
 
@@ -85,7 +85,7 @@ POST /v2/lists/{list_id}/entries/query
 }
 ```
 
-If the workspace tracks churn via a status attribute change, this is harder — Attio's API doesn't expose attribute history without paid tier add-ons. In that case: report what you can see (current churned count) and flag the limitation.
+If the workspace tracks churn via a status attribute change, this is harder, Attio's API doesn't expose attribute history without paid tier add-ons. In that case: report what you can see (current churned count) and flag the limitation.
 
 ### "Net Revenue Retention (NRR)"
 
@@ -124,7 +124,7 @@ If multiple candidates exist, ask the user which one to use. Don't guess.
 
 ## Rate limits
 
-Attio's documented limit is 1,000 req/min per workspace token (subject to change — check headers). Backoff on `429`.
+Attio's documented limit is 1,000 req/min per workspace token (subject to change, check headers). Backoff on `429`.
 
 ## What Attio CAN'T do
 

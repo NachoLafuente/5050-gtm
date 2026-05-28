@@ -1,4 +1,4 @@
-"""Output writers — styled xlsx workbook + per-section CSVs + audit trail.
+"""Output writers, styled xlsx workbook + per-section CSVs + audit trail.
 
 Optional: SQL DDL dump, DuckDB + Evidence scaffold.
 """
@@ -44,7 +44,7 @@ def write_cohort_csvs(out_dir: Path, data: dict):
     # Headline cohort_table.csv = retained MRR (the most familiar shape)
     _write_table_csv(out_dir / "cohort_table.csv", data["tables"]["retained_mrr"], cohorts, max_lt)
 
-    # Summary CSV — base counts, base MRR, profitable_since, CAC
+    # Summary CSV, base counts, base MRR, profitable_since, CAC
     with (out_dir / "00_summary.csv").open("w", newline="") as f:
         w = csv.writer(f)
         w.writerow(["cohort", "n_customers_base", "cohort_mrr_base",
@@ -62,7 +62,7 @@ def write_cohort_csvs(out_dir: Path, data: dict):
 
 
 def write_audit(out_dir: Path, customers: list, revenue: list):
-    """Audit trail — what got included as input."""
+    """Audit trail, what got included as input."""
     with (out_dir / "audit_customers.csv").open("w", newline="") as f:
         w = csv.DictWriter(
             f, fieldnames=["customer_id", "email", "domain", "name", "signup_date"]
@@ -93,7 +93,7 @@ def write_sql(out_dir: Path, data: dict, customers: list, revenue: list):
     max_lt = data["global_max_lt"]
 
     lines = [
-        "-- Cohort analysis — DDL + data. Run in any SQL engine.",
+        "-- Cohort analysis, DDL + data. Run in any SQL engine.",
         "DROP TABLE IF EXISTS customers;",
         "DROP TABLE IF EXISTS revenue;",
         "DROP TABLE IF EXISTS cohort_metrics;",

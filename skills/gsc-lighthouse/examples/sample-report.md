@@ -3,7 +3,7 @@
 Anonymized output from a real run on a small B2B marketing site (~50 indexed URLs, ~14k impressions / 28d).
 
 ```
-## GSC + Lighthouse — 2026-05-05
+## GSC + Lighthouse: 2026-05-05
 
 ### Sitemap
 - https://example.com/sitemap-index.xml
@@ -38,7 +38,7 @@ Window: 2026-04-05 → 2026-05-02
   attio vs pipedrive                 clicks=   1  impr=   53  pos=25.3
   ...
 
-### Lighthouse — top pages (mobile)
+### Lighthouse: top pages (mobile)
 | Page | Perf | SEO | A11y | Best | LCP | TBT | Console |
 |------|-----:|----:|-----:|-----:|-----|-----|--------:|
 | / | 82 | 100 | 96 | 100 | 3.6 s | 0 ms | 0 |

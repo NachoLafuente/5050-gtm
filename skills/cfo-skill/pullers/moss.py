@@ -1,13 +1,13 @@
-"""Moss puller — enriches cash_movements.csv with categorized expenses.
+"""Moss puller, enriches cash_movements.csv with categorized expenses.
 
 Moss expenses get appended to cash_movements.csv with category + department
 populated from Moss's expense accounts and teams/departments.
 
 Required env:
-  MOSS_KEY_ID      — Moss OAuth client ID (kid_…)
-  MOSS_SECRET_KEY  — Moss OAuth client secret (sk_…)
+  MOSS_KEY_ID     , Moss OAuth client ID (kid_…)
+  MOSS_SECRET_KEY , Moss OAuth client secret (sk_…)
 Optional env:
-  MOSS_BASE_URL    — defaults to https://public-api.getmoss.com
+  MOSS_BASE_URL   , defaults to https://public-api.getmoss.com
 """
 
 from __future__ import annotations

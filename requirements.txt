@@ -2,7 +2,7 @@ requests>=2.31
 python-dotenv>=1.0
 stripe>=8.0
 openpyxl>=3.1
-# Optional — only needed if you use --output evidence
+# Optional, only needed if you use --output evidence
 duckdb>=0.10
 # Only needed for /gsc-lighthouse
 google-api-python-client>=2.100

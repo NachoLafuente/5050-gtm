@@ -1,6 +1,6 @@
 ---
 name: cfo-skill
-description: Read-only CFO data dashboard for bootstrapped startups. Two modes — CSV templates (works with any stack: Attio/HubSpot/Salesforce + Qonto/Mercury/Brex + Stripe + Moss/Ramp/Pleo) or live API pull from Attio + Qonto + Stripe + Moss. Computes runway, burn rate, MRR/ARR, NRR, customer concentration, AR aging, DSO, vendor spend, departmental burn. Outputs an Excel workbook with 8 sheets. Use when the user asks "what's our runway?", "how much cash do we have?", "what's our burn?", "who are our biggest customers?", "where is spend going?", "what's our MRR?", "AR aging?". Read-only by design. NOT financial, legal, tax, or investment advice.
+description: Read-only CFO data dashboard for bootstrapped startups. Two modes, CSV templates (works with any stack: Attio/HubSpot/Salesforce + Qonto/Mercury/Brex + Stripe + Moss/Ramp/Pleo) or live API pull from Attio + Qonto + Stripe + Moss. Computes runway, burn rate, MRR/ARR, NRR, customer concentration, AR aging, DSO, vendor spend, departmental burn. Outputs an Excel workbook with 8 sheets. Use when the user asks "what's our runway?", "how much cash do we have?", "what's our burn?", "who are our biggest customers?", "where is spend going?", "what's our MRR?", "AR aging?". Read-only by design. NOT financial, legal, tax, or investment advice.
 ---
 
 # CFO Skill
@@ -15,9 +15,9 @@ description: Read-only CFO data dashboard for bootstrapped startups. Two modes �
 
 ## Two ways to use it
 
-### Mode 1 — CSV templates (works with any stack)
+### Mode 1: CSV templates (works with any stack)
 
-Drop four CSVs into a folder, run one command, get an Excel workbook. Works with **any** CRM/bank/billing stack — Attio, HubSpot, Salesforce, Pipedrive, Mercury, Brex, Stripe, Chargebee, Ramp, Pleo, whatever.
+Drop four CSVs into a folder, run one command, get an Excel workbook. Works with **any** CRM/bank/billing stack, Attio, HubSpot, Salesforce, Pipedrive, Mercury, Brex, Stripe, Chargebee, Ramp, Pleo, whatever.
 
 Templates live in [`templates/`](templates/). Realistic example data lives in [`examples/`](examples/) so you can try the pipeline before plugging in real data.
 
@@ -36,7 +36,7 @@ CSV schemas (column headers in `templates/`):
 
 `status` values: `active`, `churned`, `lead` (only `active` counts toward MRR). `direction` values: `in`, `out`. Invoice `status` values: `paid`, `unpaid`, `draft`.
 
-### Mode 2 — Live API pull (Attio + Qonto + Stripe + Moss)
+### Mode 2: Live API pull (Attio + Qonto + Stripe + Moss)
 
 Set credentials in your environment, run the puller, get the same Excel workbook from live data.
 
@@ -44,12 +44,12 @@ Set credentials in your environment, run the puller, get the same Excel workbook
 python skills/cfo-skill/run.py --source api --providers all --output cfo.xlsx
 ```
 
-Or pick specific providers — they run in the order you list, and **later writers win** on `customers.csv` / `invoices.csv`:
+Or pick specific providers, they run in the order you list, and **later writers win** on `customers.csv` / `invoices.csv`:
 
 ```bash
 python skills/cfo-skill/run.py --source api --providers qonto,stripe,moss      # Stripe-billed SaaS
 python skills/cfo-skill/run.py --source api --providers qonto,attio,moss        # CRM-driven (no Stripe)
-python skills/cfo-skill/run.py --source api --providers qonto,attio,stripe,moss # both — Stripe wins on MRR
+python skills/cfo-skill/run.py --source api --providers qonto,attio,stripe,moss # both, Stripe wins on MRR
 ```
 
 Provider-by-provider:
@@ -58,7 +58,7 @@ Provider-by-provider:
 |----------|--------|---------|-----------|
 | **Stripe** | `customers.csv` (with real MRR), `invoices.csv` | Authoritative SaaS revenue. **Use this if you bill via Stripe.** | [references/stripe.md](references/stripe.md) |
 | **Attio** | `customers.csv` | CRM-driven customer state, plan, lifecycle | [references/attio.md](references/attio.md) |
-| **Qonto** | `balances.csv`, `cash_movements.csv`, `invoices.csv` | Bank truth — cash position, transactions, AR | [references/qonto.md](references/qonto.md) |
+| **Qonto** | `balances.csv`, `cash_movements.csv`, `invoices.csv` | Bank truth, cash position, transactions, AR | [references/qonto.md](references/qonto.md) |
 | **Moss** | appends to `cash_movements.csv` | Categorized card spend, vendors, departments | [references/moss.md](references/moss.md) |
 
 Each puller writes its slice to a temp folder; the same compute layer then generates the Excel workbook. **You don't have to use all four.** A Stripe + Mercury founder can run `--providers stripe` and use CSV templates for the bank side. A HubSpot + Brex founder skips API mode entirely and uses CSV for everything.
@@ -76,7 +76,7 @@ Only set the ones for providers you actually use.
 | Qonto | `QONTO_API_KEY` + `QONTO_SECRET_KEY` (the "secret key" is your Qonto org slug) |
 | Moss | `MOSS_KEY_ID` + `MOSS_SECRET_KEY` (OAuth client credentials, scope `read`) |
 
-Skill is read-only — never request `write` scopes. Never log or echo a secret.
+Skill is read-only, never request `write` scopes. Never log or echo a secret.
 
 ---
 
@@ -84,14 +84,14 @@ Skill is read-only — never request `write` scopes. Never log or echo a secret.
 
 Eight sheets:
 
-1. **Summary** — headline metrics with heuristic flags (runway, concentration, DSO, burn multiple)
-2. **Cash Flow** — monthly inflows / outflows / net for the trailing 3 months
-3. **Customers** — full customer table from your input data
-4. **Concentration** — top 1 / 5 / 10% of MRR + top-10 customer table
-5. **AR Aging** — unpaid invoices bucketed (current, 1-30, 31-60, 61-90, 90+) + per-invoice detail
-6. **Spend** — by category, by vendor, by department
-7. **Recurring Vendors** — heuristic detection (3+ similar transactions)
-8. **Disclaimer** — full disclaimer in-workbook
+1. **Summary**: headline metrics with heuristic flags (runway, concentration, DSO, burn multiple)
+2. **Cash Flow**: monthly inflows / outflows / net for the trailing 3 months
+3. **Customers**: full customer table from your input data
+4. **Concentration**: top 1 / 5 / 10% of MRR + top-10 customer table
+5. **AR Aging**: unpaid invoices bucketed (current, 1-30, 31-60, 61-90, 90+) + per-invoice detail
+6. **Spend**: by category, by vendor, by department
+7. **Recurring Vendors**: heuristic detection (3+ similar transactions)
+8. **Disclaimer**: full disclaimer in-workbook
 
 ---
 
@@ -99,17 +99,17 @@ Eight sheets:
 
 | Metric | Formula | Heuristic flags |
 |--------|---------|-----------------|
-| Cash balance | sum of bank account balances | — |
+| Cash balance | sum of bank account balances | - |
 | Runway | cash ÷ trailing 3-month avg net burn | <12 mo red, 12-24 mo yellow |
 | Burn multiple | net burn ÷ MRR | >2× red |
-| MRR / ARR | sum of active customer MRR × 12 | — |
+| MRR / ARR | sum of active customer MRR × 12 | - |
 | Customer concentration | top-N MRR ÷ total MRR | >25% top-1 red |
 | AR aging | unpaid invoices bucketed by days past due | 60+ days red |
 | DSO | (AR ÷ 90d issued sales) × 90 days | <30 green, >60 red |
-| Spend by category | sum of outflows grouped by `category` | — |
-| Top vendors | sum of outflows grouped by `counterparty` | — |
-| Recurring vendors | counterparty appearing 3+ times in trailing window | — |
-| Departmental burn | sum of outflows grouped by `department` | — |
+| Spend by category | sum of outflows grouped by `category` | - |
+| Top vendors | sum of outflows grouped by `counterparty` | - |
+| Recurring vendors | counterparty appearing 3+ times in trailing window | - |
+| Departmental burn | sum of outflows grouped by `department` | - |
 
 Frameworks used (LTV:CAC, Rule of 40, Magic Number, etc.) live in [references/metrics-benchmarks.md](references/metrics-benchmarks.md). Bootstrapped case studies in [references/case-studies.md](references/case-studies.md).
 

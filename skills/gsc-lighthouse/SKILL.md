@@ -9,11 +9,11 @@ Pulls Google Search Console (sitemap status, per-URL index coverage, 28-day sear
 
 The point: most "SEO audit" tools throw a hundred warnings at you. This one tells you what's actually broken, calibrates against false positives, and groups fixes by theme so you can ship a single PR instead of a hundred.
 
-## Step 1 — Ask the user 2 questions
+## Step 1: Ask the user 2 questions
 
 1. **What's your GSC property?** (the verified site in Search Console)
-   - `sc-domain:example.com` — Domain property (covers all subdomains and protocols)
-   - `https://example.com/` — URL-prefix property (one specific protocol + host)
+   - `sc-domain:example.com`, Domain property (covers all subdomains and protocols)
+   - `https://example.com/`, URL-prefix property (one specific protocol + host)
    - If they don't know, link them to https://search.google.com/search-console and ask them to copy the property URL from the sidebar.
 
 2. **Do you have a `PAGESPEED_API_KEY` configured?** (`.env` or shell env)
@@ -22,7 +22,7 @@ The point: most "SEO audit" tools throw a hundred warnings at you. This one tell
 
 That's it. No other config needed.
 
-## Step 2 — Run the audit
+## Step 2: Run the audit
 
 ```bash
 cd skills/gsc-lighthouse
@@ -33,14 +33,14 @@ Add `--no-lighthouse` to skip the PSI step. Add `--top N` to audit a different n
 
 The script writes a JSON dump to `./out/audit-<date>.json` and prints the structured report to stdout.
 
-## Step 3 — Report
+## Step 3: Report
 
 Read `audit.py`'s stdout straight back to the user. Don't reformat unless they ask; the script's output is already structured for direct read.
 
 If the user wants a TL;DR, summarize in this shape:
 
 ```
-## GSC + Lighthouse — {today}
+## GSC + Lighthouse: {today}
 
 Sitemap:        {N URLs, errors/warnings}
 Indexing:       {indexed} / {total}
@@ -48,14 +48,14 @@ Search (28d):   {clicks}, {±%} vs prior 28d
 Lighthouse:     median perf {score}, median LCP {seconds}
 
 Top 3 fixes (impact-ordered):
-1. {theme} — {N pages affected}, est. {savings}
+1. {theme}, {N pages affected}, est. {savings}
 2. ...
 3. ...
 
 Bottom line: {one sentence}
 ```
 
-## Calibration — don't cry wolf
+## Calibration: don't cry wolf
 
 Apply these mental filters before flagging anything as a "problem":
 
@@ -69,7 +69,7 @@ Apply these mental filters before flagging anything as a "problem":
 Real problems worth flagging:
 - Sitemap errors > 0 or warnings > 0
 - Canonical mismatches (Google chose a different canonical than declared)
-- Pages stuck "Crawled - currently not indexed" — Google decided not to index, quality signal
+- Pages stuck "Crawled - currently not indexed", Google decided not to index, quality signal
 - Pages stuck "Discovered - currently not indexed" > 14 days
 - Soft 404s on pages that should be real content
 - Sudden traffic drops > 30% week-over-week
@@ -89,7 +89,7 @@ When you write the report (Step 3), follow these rules:
 
 ## Setup: PSI API key
 
-Anonymous PageSpeed Insights API hits get rate-limited fast (a single IP shares a small daily quota). With a free API key, the limit is 25,000/day — far more than you'll ever need.
+Anonymous PageSpeed Insights API hits get rate-limited fast (a single IP shares a small daily quota). With a free API key, the limit is 25,000/day, far more than you'll ever need.
 
 ```bash
 # 1. Enable the API on a GCP project (any project, even a fresh one)

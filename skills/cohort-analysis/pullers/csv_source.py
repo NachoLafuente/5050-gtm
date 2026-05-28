@@ -1,4 +1,4 @@
-"""CSV puller — escape hatch for any CRM or billing system that exports CSV.
+"""CSV puller, escape hatch for any CRM or billing system that exports CSV.
 
 Customers CSV columns: customer_id, email, signup_date [, name, domain]
 Revenue CSV columns:   customer_id (or email), event_date, amount [, currency]

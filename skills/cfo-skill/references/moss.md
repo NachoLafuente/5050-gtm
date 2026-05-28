@@ -1,4 +1,4 @@
-# Moss — Spend, Vendors & Departments
+# Moss: Spend, Vendors & Departments
 
 Moss holds the **categorized spend side** of the CFO picture: card transactions, expenses, suppliers, departments, accounting attributes.
 
@@ -6,10 +6,10 @@ Moss holds the **categorized spend side** of the CFO picture: card transactions,
 
 OAuth 2.0 client credentials flow:
 
-1. **Token exchange** — `POST {server_url}/oauth2/token` with `MOSS_KEY_ID` (`kid_…`) and `MOSS_SECRET_KEY` (`sk_…`).
+1. **Token exchange**: `POST {server_url}/oauth2/token` with `MOSS_KEY_ID` (`kid_…`) and `MOSS_SECRET_KEY` (`sk_…`).
 2. Returns a Bearer JWT, expires in 1 hour. Cache for the session, refresh on 401.
 3. Use `Authorization: Bearer <token>` on all subsequent calls.
-4. Scope `read` is sufficient for this skill — never request `write`.
+4. Scope `read` is sufficient for this skill, never request `write`.
 
 - Base URL: `https://public-api.getmoss.com/v1`
 - Spec: `https://developers.getmoss.com/specs/latest/openapi.yaml`
@@ -29,8 +29,8 @@ Each expense has:
 - `supplierId` → vendor
 - `teamId` / `departmentId` → cost center
 - `dimensionItemIds` → custom tags (project, campaign, etc.)
-- `type` — card transaction, invoice, reimbursement
-- `status` — pending, approved, exported
+- `type`, card transaction, invoice, reimbursement
+- `status`, pending, approved, exported
 
 **Strategy**: paginate full result set, then group by `expenseAccountId`. Resolve account names in a second pass via `GET /v1/expense-accounts`.
 
@@ -87,7 +87,7 @@ If the company funds Moss cards from a top-up account, this is the float. Combin
 GET /v1/users?limit=200
 ```
 
-Filter for active users. Group by `teamId` / `departmentId` for departmental headcount. Note: Moss `users` are people with Moss seats — not necessarily total company headcount. Cross-reference with HR if precision matters.
+Filter for active users. Group by `teamId` / `departmentId` for departmental headcount. Note: Moss `users` are people with Moss seats, not necessarily total company headcount. Cross-reference with HR if precision matters.
 
 ### "Spend by accounting dimension (project, campaign, etc.)"
 

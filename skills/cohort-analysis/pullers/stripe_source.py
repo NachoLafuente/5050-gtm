@@ -1,4 +1,4 @@
-"""Stripe puller — Customers as cohort source, paid Invoices as revenue."""
+"""Stripe puller, Customers as cohort source, paid Invoices as revenue."""
 
 from __future__ import annotations
 

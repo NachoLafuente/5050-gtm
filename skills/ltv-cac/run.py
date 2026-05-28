@@ -76,7 +76,7 @@ def main():
         try:
             write_xlsx(out_dir, out)
         except ImportError:
-            print("  (skipping xlsx — `pip install openpyxl` to enable)")
+            print("  (skipping xlsx, `pip install openpyxl` to enable)")
     if args.output in ("all", "markdown"):
         write_markdown_summary(out_dir, out)
 
@@ -93,7 +93,7 @@ def main():
     print("LTV by formula:")
     for ltv, (label, ratio) in zip(out.ltv_results, out.ltv_cac_ratios):
         ltv_str = f"${ltv.ltv:>12,.0f}" if ltv.ltv is not None else f"{'undefined':>13}"
-        ratio_str = f"{ratio:6.2f}x" if ratio is not None else f"{'—':>7}"
+        ratio_str = f"{ratio:6.2f}x" if ratio is not None else f"{'-':>7}"
         print(f"  {label:<40s} {ltv_str}   LTV/CAC = {ratio_str}")
     if out.cac_payback_basic is not None:
         print(f"\nCAC payback: {out.cac_payback_basic:.1f} months (basic)", end="")

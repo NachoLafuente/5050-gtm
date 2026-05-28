@@ -1,14 +1,14 @@
-"""Attio puller — Companies or Persons as customers, currency + date attrs as
+"""Attio puller, Companies or Persons as customers, currency + date attrs as
 revenue timeline.
 
 Attio doesn't store revenue history natively, so we reconstruct it from:
-  - amount_attr (e.g. `mrr`) — the recurring amount
-  - date_paid_attr — when the customer started paying
-  - date_churned_attr (optional) — when they churned (or assume still active)
+  - amount_attr (e.g. `mrr`), the recurring amount
+  - date_paid_attr, when the customer started paying
+  - date_churned_attr (optional), when they churned (or assume still active)
 
 Each customer becomes one event per month between date_paid and
 date_churned (or today). This works for steady-state subscriptions but
-won't capture mid-cycle upgrades/downgrades — for that, use Stripe.
+won't capture mid-cycle upgrades/downgrades, for that, use Stripe.
 """
 
 from __future__ import annotations

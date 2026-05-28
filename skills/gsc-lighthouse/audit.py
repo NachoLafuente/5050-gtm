@@ -1,4 +1,4 @@
-"""GSC + Lighthouse audit — one-shot.
+"""GSC + Lighthouse audit, one-shot.
 
 Pulls Google Search Console health for a verified property, runs Lighthouse
 via the PageSpeed Insights API on the top N pages by clicks, writes a
@@ -322,7 +322,7 @@ def short_path(url: str, base: str) -> str:
 def render_report(gsc: dict, lh: dict[str, dict] | None, base: str) -> str:
     """Compose the human-readable report."""
     lines: list[str] = []
-    lines.append(f"## GSC + Lighthouse — {date.today().isoformat()}\n")
+    lines.append(f"## GSC + Lighthouse, {date.today().isoformat()}\n")
 
     # Sitemap
     lines.append("### Sitemap")
@@ -411,7 +411,7 @@ def render_report(gsc: dict, lh: dict[str, dict] | None, base: str) -> str:
 
     # Lighthouse
     if lh:
-        lines.append("### Lighthouse — top pages (mobile)")
+        lines.append("### Lighthouse, top pages (mobile)")
         lines.append("| Page | Perf | SEO | A11y | Best | LCP | TBT | Console |")
         lines.append("|------|-----:|----:|-----:|-----:|-----|-----|--------:|")
         scored = []
@@ -449,7 +449,7 @@ def render_report(gsc: dict, lh: dict[str, dict] | None, base: str) -> str:
             if len(pages) >= 2:
                 lines.append(f"  [{len(pages):>2} pages] {theme_titles[aid]}")
         if not any(len(p) >= 2 for _, p in themes):
-            lines.append("  (no theme hits 2+ pages — site is in good shape)")
+            lines.append("  (no theme hits 2+ pages, site is in good shape)")
 
     return "\n".join(lines)
 

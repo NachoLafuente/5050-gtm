@@ -1,9 +1,9 @@
 """Write the LTV/CAC workbook with conditional formatting.
 
 Three sheets:
-  1. Verdict        — inputs, all 4 LTV formulas, payback, ratios, verdict
-  2. Sensitivity    — LTV/CAC heatmap across churn × gross margin
-  3. Cohort         — 36-month projection of a 100-customer synthetic cohort
+  1. Verdict       , inputs, all 4 LTV formulas, payback, ratios, verdict
+  2. Sensitivity   , LTV/CAC heatmap across churn × gross margin
+  3. Cohort        , 36-month projection of a 100-customer synthetic cohort
 """
 
 from __future__ import annotations
@@ -98,7 +98,7 @@ def _write_verdict_sheet(ws, out):
         else:
             ws.cell(row=r, column=3, value=ltv_res.ltv).number_format = "$#,##0"
         if ratio is None:
-            ws.cell(row=r, column=4, value="—")
+            ws.cell(row=r, column=4, value="-")
         else:
             cell = ws.cell(row=r, column=4, value=ratio)
             cell.number_format = "0.00"
@@ -126,7 +126,7 @@ def _write_verdict_sheet(ws, out):
         c.alignment = Alignment(horizontal="right")
         ws.cell(row=r, column=4, value="months")
     else:
-        ws.cell(row=r, column=3, value="—")
+        ws.cell(row=r, column=3, value="-")
     r += 1
     ws.cell(row=r, column=2, value="AI-adjusted (subtract inference)").font = LABEL_FONT
     if out.cac_payback_ai_adjusted is not None:
@@ -135,17 +135,17 @@ def _write_verdict_sheet(ws, out):
         c.alignment = Alignment(horizontal="right")
         ws.cell(row=r, column=4, value="months")
     else:
-        ws.cell(row=r, column=3, value="—")
+        ws.cell(row=r, column=3, value="-")
     r += 2
 
     # Citations
     ws.cell(row=r, column=2, value="Frameworks referenced").font = SECTION_FONT
     r += 1
     refs = [
-        "David Skok, “SaaS Metrics 2.0” — for-entrepreneurs.com",
-        "a16z, “The 16 Startup Metrics” — a16z.com",
-        "Sequoia Capital, “LTV/CAC” — sequoiacap.com",
-        "Tomasz Tunguz, “Unit Economics of LLMs” — tomtunguz.com",
+        "David Skok, “SaaS Metrics 2.0”, for-entrepreneurs.com",
+        "a16z, “The 16 Startup Metrics”, a16z.com",
+        "Sequoia Capital, “LTV/CAC”, sequoiacap.com",
+        "Tomasz Tunguz, “Unit Economics of LLMs”, tomtunguz.com",
     ]
     for ref in refs:
         ws.cell(row=r, column=2, value="• " + ref).font = ITALIC_GRAY
@@ -214,10 +214,10 @@ def _write_sensitivity_sheet(ws, out):
     legend_row = top + n_rows + 2
     ws.cell(row=legend_row, column=2, value="Skok 3:1 reference").font = SECTION_FONT
     legend = [
-        ("< 1.0 — underwater", "red"),
-        ("1.0 – 3.0 — tight, careful scaling", "yellow"),
-        ("3.0 – 5.0 — healthy (Skok target)", "green"),
-        ("> 5.0 — possibly under-investing", "blue"),
+        ("< 1.0, underwater", "red"),
+        ("1.0 – 3.0, tight, careful scaling", "yellow"),
+        ("3.0 – 5.0, healthy (Skok target)", "green"),
+        ("> 5.0, possibly under-investing", "blue"),
     ]
     for i, (text, color) in enumerate(legend):
         r = legend_row + 1 + i
@@ -274,7 +274,7 @@ def _write_cohort_sheet(ws, out):
         msg = f"Cohort does not break even within the 36-month horizon (CAC = ${cac_total:,.0f})."
         ws.cell(row=callout_row, column=2, value=msg).fill = VERDICT_FILLS["red"]
     else:
-        msg = "No CAC provided — payback section skipped."
+        msg = "No CAC provided, payback section skipped."
         ws.cell(row=callout_row, column=2, value=msg).font = ITALIC_GRAY
     ws.merge_cells(
         start_row=callout_row, start_column=2, end_row=callout_row, end_column=6,

@@ -143,7 +143,7 @@ def write_cohort_workbook(out_path: Path, data: dict) -> None:
     row += 2
 
     # ────────────────────────────────────────────────────────────────
-    # Section 1 — Customer Churn
+    # Section 1, Customer Churn
     # ────────────────────────────────────────────────────────────────
     section = ws.cell(row=row, column=2, value="1. Customer Churn")
     section.font = SECTION_FONT
@@ -200,7 +200,7 @@ def write_cohort_workbook(out_path: Path, data: dict) -> None:
     row += 3
 
     # ────────────────────────────────────────────────────────────────
-    # Section 2 — MRR Churn
+    # Section 2, MRR Churn
     # ────────────────────────────────────────────────────────────────
     section = ws.cell(row=row, column=2, value="2. MRR Churn")
     section.font = SECTION_FONT
@@ -257,14 +257,14 @@ def write_cohort_workbook(out_path: Path, data: dict) -> None:
     row += 3
 
     # ────────────────────────────────────────────────────────────────
-    # Section 3 — CAC Payback (only if CACs provided)
+    # Section 3, CAC Payback (only if CACs provided)
     # ────────────────────────────────────────────────────────────────
     if cacs:
         section = ws.cell(row=row, column=2, value="3. CAC Payback")
         section.font = SECTION_FONT
         row += 2
 
-        # Cumulative gross profit table — cohort col, CAC col, then lt_cols
+        # Cumulative gross profit table, cohort col, CAC col, then lt_cols
         title_label = (
             f"Cumulated Gross Profit in lifetime month vs. CACs "
             f"(gross margin = {gross_margin*100:.0f}%)"
@@ -306,7 +306,7 @@ def write_cohort_workbook(out_path: Path, data: dict) -> None:
 
         row = data_start + len(cohorts) + 2
 
-    # Column widths — readable
+    # Column widths, readable
     ws.column_dimensions["A"].width = 2
     ws.column_dimensions["B"].width = 12
     ws.column_dimensions["C"].width = 14

@@ -7,20 +7,20 @@ description: Compute SaaS LTV, CAC payback, and LTV/CAC ratio with multiple fram
 
 Compute LTV, CAC payback, and LTV/CAC ratio with the four canonical formulas side by side. Anchor the verdict on Skok's 3:1 rule, layer on a16z NDR, Sequoia contribution-margin, and Tunguz AI-inference adjustments. Output a styled Excel workbook with a sensitivity heatmap and a 36-month synthetic cohort projection.
 
-## Step 1 — Ask the user up to 6 inputs
+## Step 1: Ask the user up to 6 inputs
 
 Ask in order. The first 3 are required; the rest have defaults.
 
-1. **ARPU** (monthly revenue per customer, $) — e.g. `200`
-2. **Customer churn rate** (monthly, decimal) — e.g. `0.03` for 3%/mo
-3. **CAC** (customer acquisition cost, $) — e.g. `1500`
-4. **Net revenue expansion** (monthly, decimal, optional) — e.g. `0.005` for 0.5%/mo. Default `0`. If they have NDR > 100%, this is positive.
-5. **Gross margin** (decimal, optional) — e.g. `0.78`. Default `0.78` (78%, typical SaaS).
-6. **Inference / variable cost per customer per month** ($, optional) — only relevant for AI products. Default `0`.
+1. **ARPU** (monthly revenue per customer, $), e.g. `200`
+2. **Customer churn rate** (monthly, decimal), e.g. `0.03` for 3%/mo
+3. **CAC** (customer acquisition cost, $), e.g. `1500`
+4. **Net revenue expansion** (monthly, decimal, optional), e.g. `0.005` for 0.5%/mo. Default `0`. If they have NDR > 100%, this is positive.
+5. **Gross margin** (decimal, optional), e.g. `0.78`. Default `0.78` (78%, typical SaaS).
+6. **Inference / variable cost per customer per month** ($, optional), only relevant for AI products. Default `0`.
 
 If the user is hesitant on inputs, suggest they start with the example fixture (`examples/inputs.json`).
 
-## Step 2 — Run
+## Step 2: Run
 
 ```bash
 python skills/ltv-cac/run.py \
@@ -39,18 +39,18 @@ Or load all inputs from a JSON file:
 python skills/ltv-cac/run.py --inputs path/to/inputs.json --out-dir /tmp/ltv-cac
 ```
 
-## Step 3 — KPIs the user gets
+## Step 3: KPIs the user gets
 
 **Verdict sheet (the headline)**
-- **Skok basic LTV** — `ARPU × GM / churn` (the canonical 3:1 reference)
-- **NDR-adjusted LTV** — `ARPU × GM / (churn − expansion)` (a16z framework)
-- **AI-adjusted LTV** — `(ARPU × GM − inference) / churn` (Tunguz inference erosion)
-- **Sequoia contribution-margin LTV** — combines the above two: `(ARPU × GM − inference) / (churn − expansion)`
-- **CAC Payback** — months to recover CAC from gross profit. Basic and AI-adjusted.
-- **LTV/CAC ratio** — color-coded: red <1, yellow 1-3, green 3-5, blue >5
-- **Verdict statement** — plain-English read with Skok 3:1 anchor + AI flag if inference erodes LTV >20%
-- **NDR** — monthly and annual-compounded
-- **Citations** — every formula tagged with its source
+- **Skok basic LTV**: `ARPU × GM / churn` (the canonical 3:1 reference)
+- **NDR-adjusted LTV**: `ARPU × GM / (churn − expansion)` (a16z framework)
+- **AI-adjusted LTV**: `(ARPU × GM − inference) / churn` (Tunguz inference erosion)
+- **Sequoia contribution-margin LTV**: combines the above two: `(ARPU × GM − inference) / (churn − expansion)`
+- **CAC Payback**: months to recover CAC from gross profit. Basic and AI-adjusted.
+- **LTV/CAC ratio**: color-coded: red <1, yellow 1-3, green 3-5, blue >5
+- **Verdict statement**: plain-English read with Skok 3:1 anchor + AI flag if inference erodes LTV >20%
+- **NDR**: monthly and annual-compounded
+- **Citations**: every formula tagged with its source
 
 **Sensitivity sheet**
 - LTV/CAC heatmap across **monthly churn** (1% to 10%) × **gross margin** (50% to 90%)
@@ -63,20 +63,20 @@ python skills/ltv-cac/run.py --inputs path/to/inputs.json --out-dir /tmp/ltv-cac
 - Line chart of cumulative GP vs CAC
 - Payback callout: "Cohort breaks even at lifetime month N" or "Doesn't break even within 36mo"
 
-## Step 4 — Output
+## Step 4: Output
 
 Default output (`--output all`) writes to `/tmp/ltv-cac-<client>-<date>/`:
 
-- **`ltv_cac_workbook.xlsx`** — the 3-sheet styled Excel file
-- `summary.md` — markdown digest with the verdict + tables, paste-able into a doc
-- `inputs.json` — the inputs you used (re-runnable: pass with `--inputs`)
-- `ltv_summary.csv` — every formula's LTV + ratio
-- `cac_payback.csv` — basic and AI-adjusted payback months
-- `ndr.csv` — monthly + annual NDR
-- `sensitivity.csv` — full heatmap data
-- `cohort_projection.csv` — month-by-month projection
+- **`ltv_cac_workbook.xlsx`**: the 3-sheet styled Excel file
+- `summary.md`, markdown digest with the verdict + tables, paste-able into a doc
+- `inputs.json`, the inputs you used (re-runnable: pass with `--inputs`)
+- `ltv_summary.csv`, every formula's LTV + ratio
+- `cac_payback.csv`, basic and AI-adjusted payback months
+- `ndr.csv`, monthly + annual NDR
+- `sensitivity.csv`, full heatmap data
+- `cohort_projection.csv`, month-by-month projection
 
-## Step 5 — After running
+## Step 5: After running
 
 Show the user 4-5 lines:
 1. The headline verdict (one of: Underwater 🔴 / Tight 🟡 / Healthy 🟢 / Possibly under-investing 🟦)
@@ -110,9 +110,9 @@ open /tmp/ltv-cac-demo/ltv_cac_workbook.xlsx
 
 ## Frameworks referenced
 
-- **David Skok / Matrix Partners** — "SaaS Metrics 2.0", origin of the 3:1 LTV/CAC rule and the canonical `LTV = ARPU × GM / churn` formula.
-- **a16z** — "The 16 Startup Metrics", introduced NDR (Net Dollar Retention) as a first-class LTV input.
-- **Sequoia Capital** — argues for contribution-margin LTV (deduct variable costs from GM) over headline gross-margin LTV.
-- **Tomasz Tunguz / Theory** — "Unit Economics of LLMs", showing how variable inference costs erode AI-product LTV in ways the traditional formulas miss.
+- **David Skok / Matrix Partners**: "SaaS Metrics 2.0", origin of the 3:1 LTV/CAC rule and the canonical `LTV = ARPU × GM / churn` formula.
+- **a16z**: "The 16 Startup Metrics", introduced NDR (Net Dollar Retention) as a first-class LTV input.
+- **Sequoia Capital**: argues for contribution-margin LTV (deduct variable costs from GM) over headline gross-margin LTV.
+- **Tomasz Tunguz / Theory**: "Unit Economics of LLMs", showing how variable inference costs erode AI-product LTV in ways the traditional formulas miss.
 
 The skill computes all four side by side so the user sees where they agree (and where AI economics break the textbook).

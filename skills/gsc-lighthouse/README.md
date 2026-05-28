@@ -30,7 +30,7 @@ This skill batches the data, applies known calibration ("don't cry wolf" rules),
 
 ## Install
 
-### Option A — drop into your repo's Claude Code skills folder
+### Option A: drop into your repo's Claude Code skills folder
 
 ```bash
 git clone https://github.com/NachoLafuente/5050-gtm.git
@@ -39,14 +39,14 @@ cp -r 5050-gtm/skills/gsc-lighthouse /path/to/your-project/.claude/skills/
 
 In Claude Code: `/gsc-lighthouse`.
 
-### Option B — install user-wide
+### Option B: install user-wide
 
 ```bash
 git clone https://github.com/NachoLafuente/5050-gtm.git
 cp -r 5050-gtm/skills/gsc-lighthouse ~/.claude/skills/
 ```
 
-### Option C — standalone Python CLI
+### Option C: standalone Python CLI
 
 ```bash
 git clone https://github.com/NachoLafuente/5050-gtm.git
@@ -113,7 +113,7 @@ Output:
 
 See [`examples/sample-report.md`](examples/sample-report.md).
 
-## Calibration — what this skill ignores on purpose
+## Calibration: what this skill ignores on purpose
 
 A lot of SEO advice is noise. This skill explicitly skips the following non-issues:
 
@@ -129,7 +129,7 @@ A lot of SEO advice is noise. This skill explicitly skips the following non-issu
 Real problems the skill does flag:
 - Sitemap errors > 0
 - Canonical mismatches (Google picked a different URL than declared)
-- Pages "Crawled - currently not indexed" (Google decided not to index — quality signal)
+- Pages "Crawled - currently not indexed" (Google decided not to index, quality signal)
 - Pages stuck "Discovered - currently not indexed" > 14 days
 - Soft 404s
 - Sudden traffic drops > 30% week-over-week
@@ -140,8 +140,8 @@ Real problems the skill does flag:
 
 - The skill audits up to 50 sitemap URLs for index coverage (GSC URL Inspection API rate limit). For sites with > 50 indexed URLs, only the first 50 alphabetically are inspected. Search analytics still covers everything.
 - Lighthouse PSI runs are single-shot. For statistically reliable perf scores, run 3 times and take the median. The skill prioritizes getting a fast snapshot over statistical rigor.
-- Field CWV (CrUX) data only appears once your site has enough real-user traffic for Google to compute it. Newer or low-traffic sites will show no field data — that's expected.
+- Field CWV (CrUX) data only appears once your site has enough real-user traffic for Google to compute it. Newer or low-traffic sites will show no field data, that's expected.
 
 ## Built by
 
-[5050Growth](https://5050growth.com) — Attio CRM consultancy. We open-source the GTM tooling we build for clients. If you want this kind of SEO audit run on your site as part of a CRM implementation or reporting setup, [book a call](https://5050growth.com/book/).
+[5050Growth](https://5050growth.com), Attio CRM consultancy. We open-source the GTM tooling we build for clients. If you want this kind of SEO audit run on your site as part of a CRM implementation or reporting setup, [book a call](https://5050growth.com/book/).

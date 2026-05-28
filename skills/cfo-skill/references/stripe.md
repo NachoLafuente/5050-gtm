@@ -1,6 +1,6 @@
-# Stripe — Authoritative SaaS Revenue Source
+# Stripe: Authoritative SaaS Revenue Source
 
-Stripe is the **canonical revenue source** for SaaS founders that bill through it. If you have Stripe AND Attio, Stripe wins on customer-side data — it has actual subscription state, real MRR, and authoritative churn timestamps.
+Stripe is the **canonical revenue source** for SaaS founders that bill through it. If you have Stripe AND Attio, Stripe wins on customer-side data, it has actual subscription state, real MRR, and authoritative churn timestamps.
 
 ## Auth
 
@@ -26,7 +26,7 @@ ARR = MRR × 12.
 
 ### "Active customers"
 
-`GET /v1/customers?limit=100` — paginate with `starting_after`. Cross-reference with subscriptions to determine status:
+`GET /v1/customers?limit=100`, paginate with `starting_after`. Cross-reference with subscriptions to determine status:
 - Has active/trialing/past_due sub → `active`
 - Had a sub, all canceled → `churned` (use latest `canceled_at`)
 - No sub ever → `lead` (skip; not a paying customer)
@@ -35,7 +35,7 @@ ARR = MRR × 12.
 
 After computing per-customer MRR (above), sort descending. Compute top 1 / 5 / 10 percentages of total MRR.
 
-### "AR aging — unpaid invoices"
+### "AR aging: unpaid invoices"
 
 ```
 GET /v1/invoices?status=open&limit=100
@@ -61,14 +61,14 @@ DSO = (AR / total_invoiced_in_last_90d) × 90
 GET /v1/payouts?limit=100
 ```
 
-Each payout is a single deposit to your bank. If you also pull Qonto, **don't write these** — Qonto already shows them as bank credits and you'd double-count. The puller respects `STRIPE_INCLUDE_PAYOUTS=1` to opt in only when Qonto isn't connected.
+Each payout is a single deposit to your bank. If you also pull Qonto, **don't write these**: Qonto already shows them as bank credits and you'd double-count. The puller respects `STRIPE_INCLUDE_PAYOUTS=1` to opt in only when Qonto isn't connected.
 
 ## Stripe + Attio: who wins?
 
 | Field | Authoritative source |
 |-------|----------------------|
 | MRR / ARR | Stripe (real subscription state) |
-| Customer count | Stripe (paying) vs Attio (CRM total) — different definitions |
+| Customer count | Stripe (paying) vs Attio (CRM total), different definitions |
 | Plan / pricing | Stripe (current price) |
 | Churn timestamp | Stripe (`subscription.canceled_at`) |
 | Customer name / industry / segment | Attio (richer metadata) |

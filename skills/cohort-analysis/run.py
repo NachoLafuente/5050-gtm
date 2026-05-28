@@ -160,7 +160,7 @@ def main():
         try:
             write_xlsx(out_dir, data)
         except ImportError:
-            print("  (skipping xlsx — `pip install openpyxl` to enable)")
+            print("  (skipping xlsx, `pip install openpyxl` to enable)")
     if args.output == "sql":
         write_cohort_csvs(out_dir, data)
         write_sql(out_dir, data, customers, revenue)

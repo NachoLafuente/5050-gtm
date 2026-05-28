@@ -4,10 +4,10 @@ Implements four canonical LTV formulas, CAC payback, LTV/CAC verdict, a
 sensitivity grid (churn × gross margin), and a synthetic cohort projection.
 
 Frameworks referenced (cited in the workbook output, not endorsed by them):
-  - David Skok / Matrix Partners — "SaaS Metrics 2.0", the LTV/CAC 3:1 rule
-  - Sequoia Capital — contribution-margin LTV (variable costs out of GM)
-  - Andreessen Horowitz (a16z) — "16 Startup Metrics" + NDR adjustment
-  - Tomasz Tunguz (Theory) — inference-cost erosion for AI products
+  - David Skok / Matrix Partners, "SaaS Metrics 2.0", the LTV/CAC 3:1 rule
+  - Sequoia Capital, contribution-margin LTV (variable costs out of GM)
+  - Andreessen Horowitz (a16z), "16 Startup Metrics" + NDR adjustment
+  - Tomasz Tunguz (Theory), inference-cost erosion for AI products
 
 All inputs are monthly unless noted.
 """
@@ -64,39 +64,39 @@ def compute_ltv(inputs: Inputs) -> Outputs:
     # Skok basic
     if c > 0:
         ltv_results.append(LTVResult(
-            "Skok basic — ARPU × GM / churn",
+            "Skok basic, ARPU × GM / churn",
             "David Skok, SaaS Metrics 2.0",
             (a * g) / c,
         ))
     else:
         ltv_results.append(LTVResult(
-            "Skok basic — ARPU × GM / churn",
+            "Skok basic, ARPU × GM / churn",
             "David Skok, SaaS Metrics 2.0",
             None,
-            "Churn rate is 0 — LTV is undefined (infinite).",
+            "Churn rate is 0, LTV is undefined (infinite).",
         ))
 
     # With expansion (a16z NDR-adjusted)
     net = c - e
     if net > 0:
         ltv_results.append(LTVResult(
-            "NDR-adjusted — ARPU × GM / (churn - expansion)",
+            "NDR-adjusted, ARPU × GM / (churn - expansion)",
             "a16z 16 Startup Metrics",
             (a * g) / net,
         ))
     elif net == 0:
         ltv_results.append(LTVResult(
-            "NDR-adjusted — ARPU × GM / (churn - expansion)",
+            "NDR-adjusted, ARPU × GM / (churn - expansion)",
             "a16z 16 Startup Metrics",
             None,
-            "Expansion equals churn — net retention exactly 100%, theoretical LTV is infinite.",
+            "Expansion equals churn, net retention exactly 100%, theoretical LTV is infinite.",
         ))
     else:
         ltv_results.append(LTVResult(
-            "NDR-adjusted — ARPU × GM / (churn - expansion)",
+            "NDR-adjusted, ARPU × GM / (churn - expansion)",
             "a16z 16 Startup Metrics",
             None,
-            "Expansion > churn (negative net churn). LTV is theoretically infinite — use a finite horizon (e.g. 5 years) to bound it.",
+            "Expansion > churn (negative net churn). LTV is theoretically infinite, use a finite horizon (e.g. 5 years) to bound it.",
         ))
 
     # AI-adjusted (Tunguz: subtract inference from gross profit per customer-month)
@@ -104,14 +104,14 @@ def compute_ltv(inputs: Inputs) -> Outputs:
         contribution_per_month = (a * g) - i
         if contribution_per_month <= 0:
             ltv_results.append(LTVResult(
-                "AI-adjusted — (ARPU × GM − inference) / churn",
+                "AI-adjusted, (ARPU × GM − inference) / churn",
                 "Tomasz Tunguz, Unit Economics of LLMs",
                 contribution_per_month / c if c > 0 else None,
                 f"Inference cost (${i:.0f}/mo) ≥ gross profit per customer (${a*g:.0f}/mo). Each retained customer is unprofitable on a per-period basis.",
             ))
         else:
             ltv_results.append(LTVResult(
-                "AI-adjusted — (ARPU × GM − inference) / churn",
+                "AI-adjusted, (ARPU × GM − inference) / churn",
                 "Tomasz Tunguz, Unit Economics of LLMs",
                 contribution_per_month / c,
             ))
@@ -121,23 +121,23 @@ def compute_ltv(inputs: Inputs) -> Outputs:
         contribution_per_month = (a * g) - i
         if contribution_per_month > 0:
             ltv_results.append(LTVResult(
-                "Sequoia contribution-margin — (ARPU × GM − variable) / (churn − expansion)",
+                "Sequoia contribution-margin, (ARPU × GM − variable) / (churn − expansion)",
                 "Sequoia Capital, LTV/CAC 2025",
                 contribution_per_month / net,
             ))
         else:
             ltv_results.append(LTVResult(
-                "Sequoia contribution-margin — (ARPU × GM − variable) / (churn − expansion)",
+                "Sequoia contribution-margin, (ARPU × GM − variable) / (churn − expansion)",
                 "Sequoia Capital, LTV/CAC 2025",
                 None,
-                "Variable costs exceed gross profit — contribution margin is negative.",
+                "Variable costs exceed gross profit, contribution margin is negative.",
             ))
     else:
         ltv_results.append(LTVResult(
-            "Sequoia contribution-margin — (ARPU × GM − variable) / (churn − expansion)",
+            "Sequoia contribution-margin, (ARPU × GM − variable) / (churn − expansion)",
             "Sequoia Capital, LTV/CAC 2025",
             None,
-            "Net churn ≤ 0 (expansion ≥ churn) — bound this with a finite horizon.",
+            "Net churn ≤ 0 (expansion ≥ churn), bound this with a finite horizon.",
         ))
 
     # ── CAC payback ─────────────────────────────────────────────────────
@@ -151,14 +151,14 @@ def compute_ltv(inputs: Inputs) -> Outputs:
     ratios: list[tuple[str, float | None]] = []
     for r in ltv_results:
         if r.ltv is None or r.ltv < 0 or cac <= 0:
-            ratios.append((r.formula.split(" — ")[0], None))
+            ratios.append((r.formula.split(", ")[0], None))
         else:
-            ratios.append((r.formula.split(" — ")[0], r.ltv / cac))
+            ratios.append((r.formula.split(", ")[0], r.ltv / cac))
 
     # ── Verdict (anchored on Skok basic LTV/CAC) ────────────────────────
     skok_ratio = ratios[0][1]
     if skok_ratio is None or cac <= 0:
-        verdict = "Cannot compute LTV/CAC — provide CAC and ensure churn > 0."
+        verdict = "Cannot compute LTV/CAC, provide CAC and ensure churn > 0."
         verdict_color = "yellow"
     elif skok_ratio < 1:
         verdict = (
@@ -181,7 +181,7 @@ def compute_ltv(inputs: Inputs) -> Outputs:
     else:
         verdict = (
             f"🟦 Possibly under-investing: LTV/CAC = {skok_ratio:.2f}. "
-            "Above 5 may mean you're leaving growth on the table — Skok suggests 3-5x is optimal."
+            "Above 5 may mean you're leaving growth on the table, Skok suggests 3-5x is optimal."
         )
         verdict_color = "blue"
 

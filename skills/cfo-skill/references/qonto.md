@@ -1,4 +1,4 @@
-# Qonto — Cash, AR & Transactions
+# Qonto: Cash, AR & Transactions
 
 Qonto holds the **cash side** of the CFO picture: bank balance, transactions, AR (client invoices).
 
@@ -21,10 +21,10 @@ Returns the authenticated organization plus a `bank_accounts` array. Each bank a
 - `id` (UUID)
 - `iban`
 - `currency`
-- `balance` — numeric cents in `balance_cents` and minor unit
-- `authorized_balance_cents` — balance minus pending holds
+- `balance`, numeric cents in `balance_cents` and minor unit
+- `authorized_balance_cents`, balance minus pending holds
 
-Sum `balance_cents` across all bank accounts (after currency-converting if multi-currency). Report per-account too — concentrating cash in one account is a risk.
+Sum `balance_cents` across all bank accounts (after currency-converting if multi-currency). Report per-account too, concentrating cash in one account is a risk.
 
 ### "What's our trailing 3-month burn?"
 
@@ -43,7 +43,7 @@ Net burn = (sum of debits − sum of credits) / N months
 
 Use trailing 3 months for stability. For monthly granularity, group by `settled_at` month.
 
-⚠️ This includes EVERYTHING — payroll, rent, vendor payments, refunds, owner draws. Categorization happens in Moss (for cards) or in Qonto's own labels (if user labels transactions). Without categorization, "burn" is gross outflow, not OpEx.
+⚠️ This includes EVERYTHING, payroll, rent, vendor payments, refunds, owner draws. Categorization happens in Moss (for cards) or in Qonto's own labels (if user labels transactions). Without categorization, "burn" is gross outflow, not OpEx.
 
 ### "Runway"
 
@@ -52,10 +52,10 @@ Runway (months) = Total Cash / Trailing 3-month Avg Net Burn
 ```
 
 Pull cash balance + trailing burn from the two queries above. Flag if:
-- Burn is volatile (max-min spread > 50% of mean) — runway is approximate.
+- Burn is volatile (max-min spread > 50% of mean), runway is approximate.
 - Runway < 12 months → danger-zone heuristic.
 
-### "AR aging — unpaid invoices by age"
+### "AR aging: unpaid invoices by age"
 
 ```http
 GET /v2/client_invoices?status=unpaid&per_page=100
@@ -104,7 +104,7 @@ Qonto doesn't classify recurring vs one-off natively. Approximate by:
 2. Group by counterparty name (`label` or `counterparty_name`).
 3. Flag any counterparty appearing 3+ times with similar amounts.
 
-This is a heuristic — verify before acting.
+This is a heuristic, verify before acting.
 
 ## What Qonto CAN'T do
 
@@ -125,7 +125,7 @@ Not publicly documented in detail. Backoff on `429`. The skill should fetch in b
 | `GET /v2/transactions` | Transaction list (filterable by account, date, side) |
 | `GET /v2/transactions/{id}` | Single transaction detail |
 | `GET /v2/client_invoices` | Issued invoices (AR) |
-| `GET /v2/clients` | Customer list (Qonto-side, not the source of truth — Attio is) |
+| `GET /v2/clients` | Customer list (Qonto-side, not the source of truth, Attio is) |
 | `GET /v2/attachments/{id}` | Receipt/file attached to transaction |
 | `GET /v2/memberships` | Org members (for headcount sanity check) |
 

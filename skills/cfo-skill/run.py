@@ -66,14 +66,14 @@ def pull_api(out_dir: Path, providers: list[str]) -> dict:
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(description="CFO data dashboard — Attio + Qonto + Moss")
+    ap = argparse.ArgumentParser(description="CFO data dashboard, Attio + Qonto + Moss")
     ap.add_argument("--source", choices=["csv", "api"], default="csv")
     ap.add_argument("--csv-dir", type=Path, default=SKILL_DIR / "examples", help="Folder with input CSVs (csv mode)")
     ap.add_argument(
         "--providers",
         default="all",
         help="Comma-separated, in priority order (later writers win on customers.csv / invoices.csv): "
-             "qonto,attio,stripe,moss — or 'all'. Example: --providers qonto,stripe,moss",
+             "qonto,attio,stripe,moss, or 'all'. Example: --providers qonto,stripe,moss",
     )
     ap.add_argument("--output", "-o", type=Path, default=Path("cfo-dashboard.xlsx"))
     ap.add_argument("--as-of", default=None, help="Reporting date (YYYY-MM-DD), default today")

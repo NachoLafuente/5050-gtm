@@ -1,4 +1,4 @@
-"""Output writers — xlsx workbook + CSV tables + markdown summary."""
+"""Output writers, xlsx workbook + CSV tables + markdown summary."""
 
 from __future__ import annotations
 
@@ -97,7 +97,7 @@ def write_markdown_summary(out_dir: Path, out) -> None:
     ]
     for ltv, (_, ratio) in zip(out.ltv_results, out.ltv_cac_ratios):
         ltv_str = f"${ltv.ltv:,.0f}" if ltv.ltv is not None else "undefined"
-        ratio_str = f"{ratio:.2f}" if ratio is not None else "—"
+        ratio_str = f"{ratio:.2f}" if ratio is not None else "-"
         lines.append(f"| {ltv.formula} | {ltv_str} | {ratio_str} | {ltv.citation} |")
 
     lines.extend([
@@ -119,10 +119,10 @@ def write_markdown_summary(out_dir: Path, out) -> None:
         "",
         "## Frameworks referenced",
         "",
-        "- David Skok, *SaaS Metrics 2.0* — for-entrepreneurs.com",
-        "- a16z, *The 16 Startup Metrics* — a16z.com",
-        "- Sequoia Capital, *LTV/CAC* — sequoiacap.com",
-        "- Tomasz Tunguz, *Unit Economics of LLMs* — tomtunguz.com",
+        "- David Skok, *SaaS Metrics 2.0*, for-entrepreneurs.com",
+        "- a16z, *The 16 Startup Metrics*, a16z.com",
+        "- Sequoia Capital, *LTV/CAC*, sequoiacap.com",
+        "- Tomasz Tunguz, *Unit Economics of LLMs*, tomtunguz.com",
         "",
     ])
     (out_dir / "summary.md").write_text("\n".join(lines))

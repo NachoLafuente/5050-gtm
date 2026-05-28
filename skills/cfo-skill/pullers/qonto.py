@@ -1,8 +1,8 @@
-"""Qonto puller — writes balances.csv, cash_movements.csv, invoices.csv.
+"""Qonto puller, writes balances.csv, cash_movements.csv, invoices.csv.
 
 Required env:
-  QONTO_API_KEY     — your Qonto API key
-  QONTO_SECRET_KEY  — your Qonto org slug (Qonto's "secret key" looks like an org id)
+  QONTO_API_KEY    , your Qonto API key
+  QONTO_SECRET_KEY , your Qonto org slug (Qonto's "secret key" looks like an org id)
 """
 
 from __future__ import annotations

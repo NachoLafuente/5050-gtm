@@ -1,4 +1,4 @@
-"""Stripe puller — writes customers.csv (with MRR from active subs) and invoices.csv.
+"""Stripe puller, writes customers.csv (with MRR from active subs) and invoices.csv.
 
 Stripe is the canonical SaaS revenue source. For founders billing through Stripe,
 this is the most accurate MRR/ARR/churn picture.
@@ -6,7 +6,7 @@ this is the most accurate MRR/ARR/churn picture.
 Required env: STRIPE_SECRET_KEY
 
 Notes:
-  - We do NOT write cash_movements from Stripe by default — Stripe payouts already
+  - We do NOT write cash_movements from Stripe by default, Stripe payouts already
     show up as bank credits in Qonto, so adding them again would double-count.
     If you don't pull Qonto, you can opt in via STRIPE_INCLUDE_PAYOUTS=1.
 """

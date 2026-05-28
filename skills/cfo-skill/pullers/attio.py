@@ -1,10 +1,10 @@
-"""Attio puller — writes customers.csv from Attio companies.
+"""Attio puller, writes customers.csv from Attio companies.
 
 Required env: ATTIO_API_KEY
 Optional env:
-  ATTIO_MRR_ATTR    — slug of the MRR/recurring revenue attribute (default: "mrr")
-  ATTIO_STATUS_ATTR — slug of the status/lifecycle attribute (default: "status")
-  ATTIO_ACTIVE_VAL  — option ID or text of "active" status (default: "active")
+  ATTIO_MRR_ATTR   , slug of the MRR/recurring revenue attribute (default: "mrr")
+  ATTIO_STATUS_ATTR, slug of the status/lifecycle attribute (default: "status")
+  ATTIO_ACTIVE_VAL , option ID or text of "active" status (default: "active")
 """
 
 from __future__ import annotations
