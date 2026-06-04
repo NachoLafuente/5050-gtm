@@ -64,6 +64,12 @@ Sources cited inline: Skok (Matrix), a16z, Sequoia, Tunguz.
 |---|---|
 | [`/disco-prep`](skills/disco-prep/) | Pre-discovery-call prep brief from an intro email, referral, or company name. A 3-section scan doc you read in the two minutes before the call: who they are, 8 ranked scope-defining questions, and the one past win to drop as proof. Output to chat, under 350 words. |
 
+### Data / Enrichment
+
+| Skill | What it does |
+|---|---|
+| [`/attio-deepline-enrich`](skills/attio-deepline-enrich/) | Enrich records inside Attio with a real cost gate. Pick the object (companies/people/custom), the size, and the attributes to fill (emails, phones, firmographics, LinkedIn, ICP fields). It pilots one row to learn the true cost, shows you exact credits + dollars, waits for an explicit yes, runs the enrichment, then writes the values straight back into Attio. Reads/writes are free, so you only ever pay for the enrichment itself, after you approve it. Powered by [Deepline](https://deepline.com). |
+
 ### SEO / Demand
 
 | Skill | What it does |
