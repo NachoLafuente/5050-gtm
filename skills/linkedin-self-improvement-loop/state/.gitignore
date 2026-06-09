@@ -1,0 +1,7 @@
+# Personal LinkedIn data stays local, never commit it to the public repo.
+*
+!.gitignore
+!README.md
+!snapshots/
+snapshots/*
+!snapshots/.gitkeep
