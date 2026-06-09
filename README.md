@@ -70,6 +70,12 @@ Sources cited inline: Skok (Matrix), a16z, Sequoia, Tunguz.
 |---|---|
 | [`/attio-deepline-enrich`](skills/attio-deepline-enrich/) | Enrich records inside Attio with a real cost gate. Pick the object (companies/people/custom), the size, and the attributes to fill (emails, phones, firmographics, LinkedIn, ICP fields). It pilots one row to learn the true cost, shows you exact credits + dollars, waits for an explicit yes, runs the enrichment, then writes the values straight back into Attio. Reads/writes are free, so you only ever pay for the enrichment itself, after you approve it. Powered by [Deepline](https://deepline.com). |
 
+### Social / Content
+
+| Skill | What it does |
+|---|---|
+| [`/social-analytics`](skills/social-analytics/) | Turn a LinkedIn Creator analytics export into a "what works / what doesn't" report. Tags every post by topic / hook / day / length, ranks them by impressions and engagement, joins each post to its full text, and writes a styled Excel workbook + tagged CSV. Surfaces the ER-vs-reach trap and survivorship bias so you read the numbers honestly. No API keys. |
+
 ### SEO / Demand
 
 | Skill | What it does |
