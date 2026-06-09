@@ -74,7 +74,7 @@ Sources cited inline: Skok (Matrix), a16z, Sequoia, Tunguz.
 
 | Skill | What it does |
 |---|---|
-| [`/social-analytics`](skills/social-analytics/) | Turn a LinkedIn Creator analytics export into a "what works / what doesn't" report. Tags every post by topic / hook / day / length, ranks them by impressions and engagement, joins each post to its full text, and writes a styled Excel workbook + tagged CSV. Surfaces the ER-vs-reach trap and survivorship bias so you read the numbers honestly. No API keys. |
+| [`/linkedin-self-improvement-loop`](skills/linkedin-self-improvement-loop/) | A build-measure-learn loop for your LinkedIn. Ingests your Creator analytics export, keeps a persistent belief model of what drives reach and engagement, reconciles last cycle's bets against the new data, then proposes ONE experiment and drafts briefs for it. Run it on a cadence and it compounds. Advisory: it proposes, a human posts. No API keys. |
 
 ### SEO / Demand
 
