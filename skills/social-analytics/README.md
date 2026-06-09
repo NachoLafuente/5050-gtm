@@ -50,9 +50,9 @@ report without writing anything.
 
 ## Outputs (`./out/`)
 
-- `linkedin_analysis.xlsx` — Summary · Post Performance (tagged) · Daily Engagement · Followers · Demographics
-- `linkedin_posts_tagged.csv` — one row per post with topic/hook/day/length tags
-- `linkedin_posts.json` — the enriched dataset, for further scripting
+- `linkedin_analysis.xlsx` - Summary · Post Performance (tagged) · Daily Engagement · Followers · Demographics
+- `linkedin_posts_tagged.csv` - one row per post with topic/hook/day/length tags
+- `linkedin_posts.json` - the enriched dataset, for further scripting
 
 ## Read the numbers honestly
 
@@ -62,7 +62,7 @@ Two things the script reminds you of every run, because they flip the interpreta
    shows a lower ER% than a 900-impression post with the same raw engagement. Judge big
    posts by **absolute engagement**, small posts by **ER**. Don't rank on ER alone.
 2. **Survivorship bias.** LinkedIn's export is your **top ~50 posts only**. It tells you
-   what made your best tier — not what a flop looks like. "Bottom 5" = weakest of your
+   what made your best tier - not what a flop looks like. "Bottom 5" = weakest of your
    winners.
 
 Also: "engagements" is one blended number (no reaction/comment/share split), and native
@@ -72,13 +72,13 @@ prove whether media beats text. It won't pretend to.
 ## Customizing for your niche
 
 Topic and hook detection are two regex dicts at the top of `analyze.py` (`TOPICS`, `HOOKS`).
-Defaults suit a B2B / GTM / CRM brand. Edit them for your space — matched case-insensitively
+Defaults suit a B2B / GTM / CRM brand. Edit them for your space - matched case-insensitively
 against post text, and a post can match multiple topics.
 
 ## How the post-text join works
 
 LinkedIn's analytics URLs use `ugcPost`/`activity` URN IDs while the data archive uses
-`share` URN IDs — they don't match on ID. But the analytics URL embeds a text slug
+`share` URN IDs - they don't match on ID. But the analytics URL embeds a text slug
 (`attio-just-dropped-gtm-atlas-...`), so the script matches posts by normalizing your archive
 post text to the same slug shape and comparing prefixes. Typical match rate is ~80%; image/
 video posts with little commentary are the usual misses (their URLs still appear, just
@@ -86,4 +86,4 @@ without text).
 
 ---
 
-Part of [5050-gtm](../../README.md) — GTM skills for Claude Code by [5050Growth](https://5050growth.com). MIT licensed.
+Part of [5050-gtm](../../README.md) - GTM skills for Claude Code by [5050Growth](https://5050growth.com). MIT licensed.

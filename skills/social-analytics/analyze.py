@@ -42,7 +42,7 @@ except ImportError:
 
 
 # ----------------------------------------------------------------------------
-# Taxonomy. Edit these two dicts to match your niche — defaults are tuned for a
+# Taxonomy. Edit these two dicts to match your niche - defaults are tuned for a
 # B2B / GTM / CRM personal brand. Keys are labels, values are regexes matched
 # (case-insensitive) against the post text.
 # ----------------------------------------------------------------------------
@@ -286,7 +286,7 @@ def print_report(data, P, matched):
     p = L.append
 
     p("=" * 70)
-    p("LINKEDIN PERFORMANCE — what works / what doesn't")
+    p("LINKEDIN PERFORMANCE - what works / what doesn't")
     p("=" * 70)
     if s:
         p("\n## Summary")
@@ -306,7 +306,7 @@ def print_report(data, P, matched):
 
     p("\n  !! Engagement rate is inversely tied to reach: big posts dilute ER.")
     p("     Judge big posts by absolute engagement, small posts by ER.")
-    p("     This is your TOP tier only (survivorship bias) — not what flops look like.")
+    p("     This is your TOP tier only (survivorship bias) - not what flops look like.")
 
     def block(title, rows):
         p(f"\n## By {title}  (avg imp / avg eng / avg ER% / n)")

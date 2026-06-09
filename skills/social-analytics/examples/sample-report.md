@@ -5,7 +5,7 @@ stripped). Run with `--archive` for the post-text join shown here.
 
 ```
 ======================================================================
-LINKEDIN PERFORMANCE — what works / what doesn't
+LINKEDIN PERFORMANCE - what works / what doesn't
 ======================================================================
 
 ## Summary
@@ -21,7 +21,7 @@ LINKEDIN PERFORMANCE — what works / what doesn't
 
   !! Engagement rate is inversely tied to reach: big posts dilute ER.
      Judge big posts by absolute engagement, small posts by ER.
-     This is your TOP tier only (survivorship bias) — not what flops look like.
+     This is your TOP tier only (survivorship bias) - not what flops look like.
 
 ## By TOPIC  (avg imp / avg eng / avg ER% / n)
   CRM              imp    2726 | eng  37.0 | ER  2.36% | n=17
@@ -59,8 +59,8 @@ LINKEDIN PERFORMANCE — what works / what doesn't
 
 ## How to read it
 
-- **CRM / GTM topics win**; the off-brand "Other" bucket is the weakest — cut it.
+- **CRM / GTM topics win**; the off-brand "Other" bucket is the weakest - cut it.
 - **Contrarian and personal-story hooks** drive the most reach (judge them by raw
-  engagement, not ER — they're high-impression so their ER looks diluted).
+  engagement, not ER - they're high-impression so their ER looks diluted).
 - **Wednesday over-performs but is under-used; Thursday drags.** Test shifting posts.
-- **Length barely correlates** (+0.07) — no need to write long.
+- **Length barely correlates** (+0.07) - no need to write long.
